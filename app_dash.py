@@ -2725,68 +2725,92 @@ app.index_string = '''
 
 
                 const navLinks = document.querySelectorAll('.dashboard-sidebar .nav-link');
-                const scrollContainer = document.getElementById('page-content');
+                const scrollContainer = document.getElementById('page-content'); // Get scroll container once here, but re-check in handlers
 
                 window.clickNavInProgress = false;
 
                 navLinks.forEach(function(link) {
                     link.addEventListener('click', function(e) {
                         const href = this.getAttribute('href');
+                        console.log('NavLink clicked:', href); // LOG 1 (MODIFIED)
                         if (href && href.startsWith('#')) {
                             e.preventDefault();
                             const isParent = this.classList.contains('parent-nav-link');
-                             if (isParent && document.getElementById(href.substring(1))) { // Check if parent links to an actual section or just controls collapse
+                             if (isParent && document.getElementById(href.substring(1))) {
                                 const targetId = href.substring(1);
                                 const targetElement = document.getElementById(targetId);
-                                if (targetElement && scrollContainer) {
+                                const currentScrollContainer = document.getElementById('page-content'); // Re-fetch
+                                console.log('Parent NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+
+                                if (targetElement && currentScrollContainer) {
                                     window.clickNavInProgress = true;
-                                    const containerRect = scrollContainer.getBoundingClientRect();
+                                    const containerRect = currentScrollContainer.getBoundingClientRect();
                                     const targetRect = targetElement.getBoundingClientRect();
-                                    const scrollPosition = scrollContainer.scrollTop;
+                                    const scrollPosition = currentScrollContainer.scrollTop;
                                     const targetTopRelativeToContainer = targetRect.top - containerRect.top;
-                                    const offset = 20; // Default offset for section headers
+                                    const offset = 20;
                                     let scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
-                                    scrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
-                                    if (history.pushState) { history.pushState(null, null, href); }
-                                    setTimeout(() => { window.clickNavInProgress = false; }, 800);
+
+                                    console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
+                                    currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
+
+                                    setTimeout(() => {
+                                        console.log('Parent NavLink - Pushing history state for:', href); // LOG (MODIFIED)
+                                        if (history.pushState) {
+                                            history.pushState(null, null, href);
+                                        }
+                                        window.clickNavInProgress = false;
+                                        console.log('Parent NavLink - clickNavInProgress set to false for:', href); // LOG (MODIFIED)
+                                    }, 800);
+                                }  else {
+                                    console.warn('Parent NavLink - Scroll skipped: target or scrollContainer not found for', href); // LOG (MODIFIED)
                                 }
-                                return; // Still prevent default even if it's just scrolling
+                                return;
                             } else if (isParent){
-                                // If parent link doesn't map to section, just update hash for collapse
-                                if (history.pushState) { history.pushState(null, null, href); }
+                                console.log('Parent NavLink - No direct section, updating hash for collapse for:', href); // LOG (MODIFIED)
+                                setTimeout(() => { // Delay to allow collapse JS to run
+                                    if (history.pushState) { history.pushState(null, null, href); }
+                                }, 0);
                                 return;
                             }
 
                             // Handle nested links
                             const targetId = href.substring(1);
                             const targetElement = document.getElementById(targetId);
-                            if (targetElement && scrollContainer) {
+                            const currentScrollContainer = document.getElementById('page-content'); // Re-fetch
+                            console.log('Nested NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+
+                            if (targetElement && currentScrollContainer) {
                                 window.clickNavInProgress = true;
-                                const containerRect = scrollContainer.getBoundingClientRect();
+                                const containerRect = currentScrollContainer.getBoundingClientRect();
                                 const targetRect = targetElement.getBoundingClientRect();
-                                const scrollPosition = scrollContainer.scrollTop;
+                                const scrollPosition = currentScrollContainer.scrollTop;
                                 const targetTopRelativeToContainer = targetRect.top - containerRect.top;
                                 let scrollTo;
-                                const offset = 20; // Define offset here for use below
+                                const offset = 20;
 
-                                // Check if the target is a chart container for centering
-                                if (targetId.includes('-chart-container') || targetId === 'limitations-info-container' || targetId === 'segment-info-container') { // Also center limitations/segment carousel
+                                if (targetId.includes('-chart-container') || targetId === 'limitations-info-container' || targetId === 'segment-info-container') {
                                     const targetHeight = targetRect.height;
                                     const containerHeight = containerRect.height;
-                                    // Calculate scroll position to center the element
                                     scrollTo = scrollPosition + targetTopRelativeToContainer - (containerHeight / 2) + (targetHeight / 2);
-                                    // Ensure scroll doesn't go beyond boundaries
                                     scrollTo = Math.max(0, scrollTo);
-                                    scrollTo = Math.min(scrollContainer.scrollHeight - containerHeight, scrollTo);
+                                    scrollTo = Math.min(currentScrollContainer.scrollHeight - containerHeight, scrollTo);
                                 } else {
-                                    // Standard scroll for section headers
                                     scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
                                 }
+                                console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
+                                currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
 
-                                scrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
-                                // Update hash *after* initiating scroll
-                                if (history.pushState) { history.pushState(null, null, href); }
-                                setTimeout(() => { window.clickNavInProgress = false; }, 800); // Prevent scroll listener conflicts
+                                setTimeout(() => {
+                                    console.log('Nested NavLink - Pushing history state for:', href); // LOG (MODIFIED)
+                                    if (history.pushState) {
+                                        history.pushState(null, null, href);
+                                    }
+                                    window.clickNavInProgress = false;
+                                    console.log('Nested NavLink - clickNavInProgress set to false for:', href); // LOG (MODIFIED)
+                                }, 800); // MODIFIED: history.pushState moved into timeout
+                            } else {
+                                console.warn('Nested NavLink - Scroll skipped: target or scrollContainer not found for', href); // LOG (MODIFIED)
                             }
                         }
                     });
@@ -2794,71 +2818,73 @@ app.index_string = '''
 
                 const initialHash = window.location.hash;
                 if (initialHash && initialHash !== '#') {
-                    const targetId = initialHash.substring(1);
-                    const targetElement = document.getElementById(targetId);
-                     if (targetElement && scrollContainer) {
-                         // Check if target is inside a closed collapse
+                    const targetId = initialHash.substring(1); // initialHash must be defined before use
+                    const scrollToTarget = () => { // Define scrollToTarget function
+                        try {
+                            // const targetId = initialHash.substring(1); // Already defined outside
+                            const currentScrollContainer = document.getElementById('page-content');
+                            const targetElement = document.getElementById(targetId);
+                            console.log('Initial Scroll - Target:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+
+                            if (!currentScrollContainer || !targetElement) {
+                                console.warn('Initial scroll aborted: target or container missing for', targetId); // LOG (MODIFIED)
+                                return;
+                            }
+                             const containerRect = currentScrollContainer.getBoundingClientRect();
+                             const targetRect = targetElement.getBoundingClientRect();
+                             const scrollPosition = currentScrollContainer.scrollTop;
+                             const targetTopRelativeToContainer = targetRect.top - containerRect.top;
+                             let scrollTo;
+                             const offset = 20;
+
+                             if (targetId.includes('-chart-container') || targetId === 'limitations-info-container' || targetId === 'segment-info-container') {
+                                 const targetHeight = targetRect.height;
+                                 const containerHeight = containerRect.height;
+                                 scrollTo = scrollPosition + targetTopRelativeToContainer - (containerHeight / 2) + (targetHeight / 2);
+                                 scrollTo = Math.max(0, scrollTo);
+                                 scrollTo = Math.min(currentScrollContainer.scrollHeight - containerHeight, scrollTo);
+                             } else {
+                                 scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
+                             }
+                             console.log('Initial scrolling to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
+                             currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' });
+                         } catch (e) {
+                            console.error("Error during initial scroll:", e); // LOG (MODIFIED)
+                         }
+                     };
+
+                    const targetElement = document.getElementById(targetId); // Check targetElement outside scrollToTarget for collapse logic
+                     if (targetElement) { // No need for currentScrollContainer check here, just for targetElement
                          const parentCollapse = targetElement.closest('.collapse:not(.show)');
                          let needsExpand = false;
                          let controllingNavLinkId = null;
                          if(parentCollapse){
-                            // Find the nav link that controls this collapse
                              const collapseId = parentCollapse.id;
-                              const potentialNavLink = document.querySelector(`.nav-link.parent-nav-link[data-bs-target="#${collapseId}"]`); // Check for explicit data-bs-target
+                              const potentialNavLink = document.querySelector(`.nav-link.parent-nav-link[data-bs-target="#${collapseId}"]`);
                               let parentNavLink = potentialNavLink;
                               if (!parentNavLink) {
-                                 // Fallback to href-based matching if data-bs-target isn't used (less common with DBC)
-                                 const parentId = collapseId.replace('collapse-', ''); // Assuming standard naming convention
+                                 const parentId = collapseId.replace('collapse-', '');
                                  parentNavLink = document.querySelector(`.nav-link.parent-nav-link[href="#${parentId}"]`);
-                                 if (!parentNavLink) { // Last resort: check if the hash matches a parent link href directly
+                                 if (!parentNavLink) {
                                       parentNavLink = document.querySelector(`.nav-link.parent-nav-link[href="#${collapseId.replace('collapse-', '')}"]`);
                                  }
                               }
-
                              if (parentNavLink) {
                                 controllingNavLinkId = parentNavLink.id;
                                 needsExpand = true;
                              }
                          }
-                         const scrollToTarget = () => {
-                             try {
-                                 const scrollContainer = document.getElementById('page-content'); // Re-get inside timeout
-                                 const targetElement = document.getElementById(targetId); // Re-get target
-                                 if (!scrollContainer || !targetElement) return; // Check elements exist
 
-                                 const containerRect = scrollContainer.getBoundingClientRect();
-                                 const targetRect = targetElement.getBoundingClientRect();
-                                 const scrollPosition = scrollContainer.scrollTop;
-                                 const targetTopRelativeToContainer = targetRect.top - containerRect.top;
-                                 let scrollTo;
-                                 const offset = 20; // Define offset here too
-
-                                // Center chart containers and limitations/segment carousel on initial load too
-                                 if (targetId.includes('-chart-container') || targetId === 'limitations-info-container' || targetId === 'segment-info-container') {
-                                     const targetHeight = targetRect.height;
-                                     const containerHeight = containerRect.height;
-                                     scrollTo = scrollPosition + targetTopRelativeToContainer - (containerHeight / 2) + (targetHeight / 2);
-                                     scrollTo = Math.max(0, scrollTo);
-                                     scrollTo = Math.min(scrollContainer.scrollHeight - containerHeight, scrollTo);
-                                 } else {
-                                     // Standard offset for sections
-                                     scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
-                                 }
-                                 scrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' }); // Use 'auto' for initial load
-                             } catch (e) { console.error("Error during initial scroll:", e); }
-                         };
-                        // Trigger click on parent nav link if needed to expand
                         if (needsExpand && controllingNavLinkId) {
                             const parentNavLink = document.getElementById(controllingNavLinkId);
                             if (parentNavLink) {
-                                // console.log('Simulating click to expand:', controllingNavLinkId);
-                                parentNavLink.click(); // Simulate click to trigger collapse toggle
-                                setTimeout(scrollToTarget, 450); // Delay scroll after simulated click/animation
+                                parentNavLink.click();
+                                setTimeout(scrollToTarget, 450);
                             } else {
-                                setTimeout(scrollToTarget, 150); // No expansion needed or link not found
+                                setTimeout(scrollToTarget, 150);
                             }
                         } else {
-                             setTimeout(scrollToTarget, 150); // No expansion needed
+                             setTimeout(scrollToTarget, 150);
                         }
                      }
                  }
@@ -2868,12 +2894,9 @@ app.index_string = '''
                      const visualizationsSection = document.getElementById('visualizations');
                      const floatingToolbar = document.getElementById('floating-viz-toolbar');
                      const sidebar = document.querySelector('.dashboard-sidebar');
-                     // MODIFIED: Use the first VW chart container for positioning
                      const firstChartCard = document.querySelector('#van-westendorp-chart-control').closest('.chart-card');
 
-
                      if (!visualizationsSection || !floatingToolbar || !sidebar || !firstChartCard) {
-                         // console.warn('Could not find all required elements for floating toolbar positioning');
                          return;
                      }
 
@@ -2886,7 +2909,7 @@ app.index_string = '''
                              const chartLeft = chartRect.left;
                              const availableSpace = chartLeft - sidebarRight;
 
-                             if (availableSpace > toolbarWidth + 32) { // Keep margin
+                             if (availableSpace > toolbarWidth + 32) {
                                  const desiredLeft = sidebarRight + (availableSpace / 2) - (toolbarWidth / 2);
                                  floatingToolbar.style.left = `${desiredLeft}px`;
                              } else {
@@ -2902,11 +2925,9 @@ app.index_string = '''
                         const scrollContainer = document.getElementById('page-content');
                         const vizTitleElement = visualizationsSection.querySelector('h3');
                         const floatingToolbar = document.getElementById('floating-viz-toolbar');
-                         // Use the *last chart* as the bottom boundary marker (primary-usage now)
-                         const lastChartCard = document.querySelector('#expansion-matrix-chart').closest('.chart-card'); // Last chart
+                         const lastChartCard = document.querySelector('#expansion-matrix-chart').closest('.chart-card');
 
                         if (!scrollContainer || !vizTitleElement || !floatingToolbar || !lastChartCard) {
-                             // console.warn("Missing elements for scroll check");
                              return;
                         }
 
@@ -2917,11 +2938,8 @@ app.index_string = '''
                         const lastChartRect = lastChartCard.getBoundingClientRect();
                         const toolbarRect = floatingToolbar.getBoundingClientRect();
 
-                        // Condition 1: Top of viz title above middle of viewport (scrolled down enough)
                          const viewportMiddle = containerRect.top + (containerRect.height / 2);
                          const showCondition1 = titleRect.top < viewportMiddle;
-
-                         // Condition 2: Bottom of *last chart* below top of toolbar
                          const showCondition2 = lastChartRect.bottom > toolbarRect.top + 50 ;
 
                          if (showCondition1 && showCondition2) {
@@ -2931,9 +2949,9 @@ app.index_string = '''
                          }
                      }
 
-                     const scrollContainer = document.getElementById('page-content');
-                     if (scrollContainer) {
-                         scrollContainer.addEventListener('scroll', checkScrollPosition);
+                     const currentScrollContainer = document.getElementById('page-content'); // Use a consistent variable name
+                     if (currentScrollContainer) {
+                         currentScrollContainer.addEventListener('scroll', checkScrollPosition);
                          setTimeout(() => {
                              positionToolbar();
                              checkScrollPosition();
