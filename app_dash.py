@@ -23,6 +23,14 @@ app = dash.Dash(__name__, external_stylesheets=[
 ], assets_folder='assets') # Removed suppress_callback_exceptions=True
 server = app.server
 
+@server.after_request
+def add_header(response):
+    if response.content_type and 'text/html' in response.content_type: # Only for HTML pages
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
+
 # --- Constants and Styles ---
 DATA_FILE = "kizik_generated_sim_data_FINAL.csv"
 IMAGE_FILE_PATH_RELATIVE = "assets/final flowchart.png"
