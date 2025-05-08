@@ -39,7 +39,7 @@ def add_header(response):
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
     return response
-        
+
 # --- Constants and Styles ---
 DATA_FILE = "kizik_generated_sim_data_FINAL.csv"
 IMAGE_FILE_PATH_RELATIVE = "assets/final flowchart.png"
@@ -2317,6 +2317,10 @@ app.index_string = '''
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <style>
             /* --- Base Styles (Keep Essential) --- */
+            /* BRUTAL RESET - VERY FIRST THING */
+            * {
+                scroll-behavior: auto !important;
+            }
             html {
                 scroll-behavior: auto !important; /* CHANGED: No smooth scroll globally */
                 margin: 0 !important;
@@ -2333,6 +2337,7 @@ app.index_string = '''
                 }
             }
             body {
+                scroll-behavior: auto !important;
                 font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                 color: #2B2B2B;
                 -webkit-font-smoothing: antialiased;
