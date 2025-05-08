@@ -27,16 +27,19 @@ server = app.server
 
 @server.after_request
 def add_header(response):
+    # Get the base path for assets using Dash's recommended method
+    assets_base_path = app.get_asset_url('') # This will be something like '/assets/'
+
     # Check if the request path starts with what Dash uses for assets
-    # app.config.assets_url_path is usually '/assets'
-    is_asset_request = request.path.startswith(app.config['ASSETS_URL_PATH'])
+    is_asset_request = request.path.startswith(assets_base_path)
 
     if response.mimetype == 'text/html' or \
-       (response.mimetype == 'text/css' and is_asset_request): # Apply to HTML and CSS served from assets
+       (response.mimetype == 'text/css' and is_asset_request):
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
     return response
+        
 # --- Constants and Styles ---
 DATA_FILE = "kizik_generated_sim_data_FINAL.csv"
 IMAGE_FILE_PATH_RELATIVE = "assets/final flowchart.png"
