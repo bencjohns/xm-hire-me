@@ -994,7 +994,7 @@ app.layout = html.Div([
             dcc.Markdown("""""", className="text-content")
         ], id="overview", className="text-container"),
         html.Div([
-            html.H3("Goal-Test", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
+            html.H3("Goal", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
             
             My goal with this project was to explore out-of-state price sensitivity to Kizik shoes relative to brand awareness and feature awareness, using a parameter-informed simulation.
@@ -2838,6 +2838,11 @@ app.index_string = '''
                                 } else {
                                     scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
                                 }
+
+                                const computedStyle = window.getComputedStyle(currentScrollContainer);
+                                console.log('(NestedClick) Current scroll container ID:', currentScrollContainer.id); 
+                                console.log('(NestedClick) Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
+
                                 console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
                                 // --- MODIFIED: Removed behavior: 'smooth' ---
                                 currentScrollContainer.scrollTo({ top: scrollTo });
@@ -2887,6 +2892,11 @@ app.index_string = '''
                              } else {
                                  scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
                              }
+                             
+                             const computedStyle = window.getComputedStyle(currentScrollContainer);
+                             console.log('Current scroll container ID:', currentScrollContainer.id); // Added ID for clarity
+                             console.log('Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
+
                              console.log('Initial scrolling to:', scrollTo, 'for target:', targetId);
                               // --- MODIFIED: Ensured behavior is 'auto' (or absent) ---
                              currentScrollContainer.scrollTo({ top: scrollTo });
