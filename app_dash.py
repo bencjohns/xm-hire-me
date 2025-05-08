@@ -1,3 +1,4 @@
+from flask import request
 # app_dash.py
 # fyi you're gonna see a TON of poorly formatted code here, but it WORKS baby
 
@@ -19,18 +20,23 @@ from sklearn.preprocessing import StandardScaler
 # Initialize the Dash app
 app = dash.Dash(__name__, external_stylesheets=[
     dbc.themes.BOOTSTRAP,
+    "assets/bootstrap.min.css", # --- adding path to my local copy to prevent CDN caching issues
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 ], assets_folder='assets') # Removed suppress_callback_exceptions=True
 server = app.server
 
 @server.after_request
 def add_header(response):
-    if response.content_type and 'text/html' in response.content_type: # Only for HTML pages
+    # Check if the request path starts with what Dash uses for assets
+    # app.config.assets_url_path is usually '/assets'
+    is_asset_request = request.path.startswith(app.config['ASSETS_URL_PATH'])
+
+    if response.mimetype == 'text/html' or \
+       (response.mimetype == 'text/css' and is_asset_request): # Apply to HTML and CSS served from assets
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
     return response
-
 # --- Constants and Styles ---
 DATA_FILE = "kizik_generated_sim_data_FINAL.csv"
 IMAGE_FILE_PATH_RELATIVE = "assets/final flowchart.png"
