@@ -994,7 +994,7 @@ app.layout = html.Div([
             dcc.Markdown("""""", className="text-content")
         ], id="overview", className="text-container"),
         html.Div([
-            html.H3("Goal", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
+            html.H3("Goal-Test", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
             
             My goal with this project was to explore out-of-state price sensitivity to Kizik shoes relative to brand awareness and feature awareness, using a parameter-informed simulation.
