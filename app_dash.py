@@ -2297,6 +2297,15 @@ app.index_string = '''
                 padding: 0 !important;
                 overflow: hidden !important;
             }
+            @media (prefers-reduced-motion: no-preference) {
+                :root {
+                    scroll-behavior: auto !important;
+                }
+                /* You might also need it for html directly if :root isn't enough */
+                html {
+                    scroll-behavior: auto !important;
+                }
+            }
             body {
                 font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                 color: #2B2B2B;
