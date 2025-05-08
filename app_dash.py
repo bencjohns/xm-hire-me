@@ -2292,7 +2292,7 @@ app.index_string = '''
         <style>
             /* --- Base Styles (Keep Essential) --- */
             html {
-                scroll-behavior: smooth;
+                scroll-behavior: auto !important; /* CHANGED: No smooth scroll globally */
                 margin: 0 !important;
                 padding: 0 !important;
                 overflow: hidden !important;
@@ -2319,6 +2319,7 @@ app.index_string = '''
                 left: 0 !important;
                 overflow-y: scroll !important;
                 width: calc(100% - 18rem) !important;
+                scroll-behavior: auto !important; /* CHANGED: Ensure container scroll is instant */
             }
             .dashboard-sidebar {
                 position: fixed !important;
@@ -2691,8 +2692,6 @@ app.index_string = '''
             {%renderer%}
         </footer>
         <script>
-         // --- Keep the exact comprehensive JS code from the ORIGINAL version ---
-         // (Includes arrow observers, scroll handling, initial hash nav, toolbar positioning)
          window.addEventListener('load', function() {
               // Function to handle arrow rotation using MutationObserver
                 function setupArrowObserver(collapseId, navLinkId) {
@@ -2701,7 +2700,6 @@ app.index_string = '''
                     const arrowElement = navLinkElement ? navLinkElement.querySelector('.nav-arrow') : null;
 
                     if (!collapseElement || !arrowElement || !navLinkElement) {
-                        // console.warn('Observer setup failed for:', collapseId, navLinkId);
                         return;
                     }
 
@@ -2721,26 +2719,26 @@ app.index_string = '''
                  setupArrowObserver('collapse-overview', 'nav-overview');
                  setupArrowObserver('collapse-methodology', 'nav-methodology-design');
                  setupArrowObserver('collapse-my-role', 'nav-my-role');
-                 setupArrowObserver('collapse-visualizations', 'nav-visualizations'); // Added observer for visualizations collapse
+                 setupArrowObserver('collapse-visualizations', 'nav-visualizations');
 
 
                 const navLinks = document.querySelectorAll('.dashboard-sidebar .nav-link');
-                const scrollContainer = document.getElementById('page-content'); // Get scroll container once here, but re-check in handlers
+                const scrollContainer = document.getElementById('page-content');
 
                 window.clickNavInProgress = false;
 
                 navLinks.forEach(function(link) {
                     link.addEventListener('click', function(e) {
                         const href = this.getAttribute('href');
-                        console.log('NavLink clicked:', href); // LOG 1 (MODIFIED)
+                        console.log('NavLink clicked:', href);
                         if (href && href.startsWith('#')) {
                             e.preventDefault();
                             const isParent = this.classList.contains('parent-nav-link');
                              if (isParent && document.getElementById(href.substring(1))) {
                                 const targetId = href.substring(1);
                                 const targetElement = document.getElementById(targetId);
-                                const currentScrollContainer = document.getElementById('page-content'); // Re-fetch
-                                console.log('Parent NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+                                const currentScrollContainer = document.getElementById('page-content');
+                                console.log('Parent NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
 
                                 if (targetElement && currentScrollContainer) {
                                     window.clickNavInProgress = true;
@@ -2751,24 +2749,26 @@ app.index_string = '''
                                     const offset = 20;
                                     let scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
 
-                                    console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
-                                    currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
+                                    console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
+                                    // --- MODIFIED: Removed behavior: 'smooth' ---
+                                    currentScrollContainer.scrollTo({ top: scrollTo });
+                                    // --- MODIFIED: Moved history.pushState outside timeout ---
+                                    if (history.pushState) {
+                                        console.log('Parent NavLink - Pushing history state for:', href);
+                                        history.pushState(null, null, href);
+                                    }
 
                                     setTimeout(() => {
-                                        console.log('Parent NavLink - Pushing history state for:', href); // LOG (MODIFIED)
-                                        if (history.pushState) {
-                                            history.pushState(null, null, href);
-                                        }
                                         window.clickNavInProgress = false;
-                                        console.log('Parent NavLink - clickNavInProgress set to false for:', href); // LOG (MODIFIED)
-                                    }, 800);
+                                        console.log('Parent NavLink - clickNavInProgress set to false for:', href);
+                                    }, 100); // Shorter timeout might be okay now
                                 }  else {
-                                    console.warn('Parent NavLink - Scroll skipped: target or scrollContainer not found for', href); // LOG (MODIFIED)
+                                    console.warn('Parent NavLink - Scroll skipped: target or scrollContainer not found for', href);
                                 }
                                 return;
                             } else if (isParent){
-                                console.log('Parent NavLink - No direct section, updating hash for collapse for:', href); // LOG (MODIFIED)
-                                setTimeout(() => { // Delay to allow collapse JS to run
+                                console.log('Parent NavLink - No direct section, updating hash for collapse for:', href);
+                                setTimeout(() => {
                                     if (history.pushState) { history.pushState(null, null, href); }
                                 }, 0);
                                 return;
@@ -2777,8 +2777,8 @@ app.index_string = '''
                             // Handle nested links
                             const targetId = href.substring(1);
                             const targetElement = document.getElementById(targetId);
-                            const currentScrollContainer = document.getElementById('page-content'); // Re-fetch
-                            console.log('Nested NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+                            const currentScrollContainer = document.getElementById('page-content');
+                            console.log('Nested NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
 
                             if (targetElement && currentScrollContainer) {
                                 window.clickNavInProgress = true;
@@ -2798,19 +2798,21 @@ app.index_string = '''
                                 } else {
                                     scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
                                 }
-                                console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
-                                currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'smooth' });
+                                console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
+                                // --- MODIFIED: Removed behavior: 'smooth' ---
+                                currentScrollContainer.scrollTo({ top: scrollTo });
+                                // --- MODIFIED: Moved history.pushState outside timeout ---
+                                if (history.pushState) {
+                                    console.log('Nested NavLink - Pushing history state for:', href);
+                                    history.pushState(null, null, href);
+                                }
 
                                 setTimeout(() => {
-                                    console.log('Nested NavLink - Pushing history state for:', href); // LOG (MODIFIED)
-                                    if (history.pushState) {
-                                        history.pushState(null, null, href);
-                                    }
                                     window.clickNavInProgress = false;
-                                    console.log('Nested NavLink - clickNavInProgress set to false for:', href); // LOG (MODIFIED)
-                                }, 800); // MODIFIED: history.pushState moved into timeout
+                                    console.log('Nested NavLink - clickNavInProgress set to false for:', href);
+                                }, 100); // Shorter timeout might be okay now
                             } else {
-                                console.warn('Nested NavLink - Scroll skipped: target or scrollContainer not found for', href); // LOG (MODIFIED)
+                                console.warn('Nested NavLink - Scroll skipped: target or scrollContainer not found for', href);
                             }
                         }
                     });
@@ -2818,16 +2820,15 @@ app.index_string = '''
 
                 const initialHash = window.location.hash;
                 if (initialHash && initialHash !== '#') {
-                    const targetId = initialHash.substring(1); // initialHash must be defined before use
-                    const scrollToTarget = () => { // Define scrollToTarget function
+                    const targetId = initialHash.substring(1);
+                    const scrollToTarget = () => {
                         try {
-                            // const targetId = initialHash.substring(1); // Already defined outside
                             const currentScrollContainer = document.getElementById('page-content');
                             const targetElement = document.getElementById(targetId);
-                            console.log('Initial Scroll - Target:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null'); // LOG (MODIFIED)
+                            console.log('Initial Scroll - Target:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
 
                             if (!currentScrollContainer || !targetElement) {
-                                console.warn('Initial scroll aborted: target or container missing for', targetId); // LOG (MODIFIED)
+                                console.warn('Initial scroll aborted: target or container missing for', targetId);
                                 return;
                             }
                              const containerRect = currentScrollContainer.getBoundingClientRect();
@@ -2846,15 +2847,16 @@ app.index_string = '''
                              } else {
                                  scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
                              }
-                             console.log('Initial scrolling to:', scrollTo, 'for target:', targetId); // LOG (MODIFIED)
-                             currentScrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' });
+                             console.log('Initial scrolling to:', scrollTo, 'for target:', targetId);
+                              // --- MODIFIED: Ensured behavior is 'auto' (or absent) ---
+                             currentScrollContainer.scrollTo({ top: scrollTo });
                          } catch (e) {
-                            console.error("Error during initial scroll:", e); // LOG (MODIFIED)
+                            console.error("Error during initial scroll:", e);
                          }
                      };
 
-                    const targetElement = document.getElementById(targetId); // Check targetElement outside scrollToTarget for collapse logic
-                     if (targetElement) { // No need for currentScrollContainer check here, just for targetElement
+                    const targetElement = document.getElementById(targetId);
+                     if (targetElement) {
                          const parentCollapse = targetElement.closest('.collapse:not(.show)');
                          let needsExpand = false;
                          let controllingNavLinkId = null;
@@ -2949,7 +2951,7 @@ app.index_string = '''
                          }
                      }
 
-                     const currentScrollContainer = document.getElementById('page-content'); // Use a consistent variable name
+                     const currentScrollContainer = document.getElementById('page-content');
                      if (currentScrollContainer) {
                          currentScrollContainer.addEventListener('scroll', checkScrollPosition);
                          setTimeout(() => {
