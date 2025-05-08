@@ -1,0 +1,30 @@
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor/OS specific files (optional but good practice)
+.vscode/
+.idea/
+.DS_Store
+*.db
+
+# Large data files (if you don't want them in Git)
+# *.csv 
+# *.xlsx
+# *.json 
+# (Uncomment the lines above if your data file is huge 
+# and you plan to load it from cloud storage or elsewhere 
+# in production. For now, you can leave them commented 
+# if kizik_generated_sim_data_FINAL is reasonably sized
+# and needed by the deployed app directly).
+
+# Local environment variables (if you use them)
+# .env
