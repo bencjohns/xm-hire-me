@@ -246,6 +246,19 @@ def load_data(file_path):
         print(f"Error: Data file not found at path: {file_path}")
         return None
 
+# --- LOAD DATA GLOBALLY ---
+print("Attempting to load data globally...")
+app_data = load_data(DATA_FILE) # Call the function
+
+if app_data is None:
+    print("FATAL: Global data loading failed. App functionality will be limited.")
+    # Consider how the app should behave if data is essential and fails to load.
+    # For now, subsequent checks in callbacks will handle this.
+else:
+    print(f"Global data loaded successfully with {len(app_data)} rows.")
+# --- END GLOBAL LOAD ---
+
+
 # --- Helper Function for WTP Calculation ---
 def calculate_wtp_series(df, price_points_dict, likelihood_threshold=50):
     """Calculates WTP series from probability columns."""
@@ -270,9 +283,12 @@ def calculate_wtp_series(df, price_points_dict, likelihood_threshold=50):
 # --- Plotting Functions ---
 
 # 1. Willingness To Pay (Gabor-Granger - Pre/Post, Segmented)
-# (Function remains the same as previous version)
-def create_wtp_gg_chart(df, segment_filter='All Segments'):
-    if df is None or df.empty:
+def create_wtp_gg_chart(segment_filter='All Segments'): # Removed df argument
+    if app_data is None: # Check global
+         return go.Figure().update_layout(title_text="Data unavailable for WTP chart", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty: # Check if the globally loaded data (now local df) is empty
         return go.Figure().update_layout(title_text="No data available for WTP chart", plot_bgcolor='white', paper_bgcolor='white')
 
     # Clean price point dict keys to match cleaned column names
@@ -329,9 +345,12 @@ def create_wtp_gg_chart(df, segment_filter='All Segments'):
     return fig
 
 # 2. Regional WTP Map
-# (Function remains the same as previous version, using cleaned column name)
-def create_regional_map(df, segment_filter='All Segments', wtp_price_point=139):
-    if df is None or df.empty:
+def create_regional_map(segment_filter='All Segments', wtp_price_point=139): # Removed df argument
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Regional Map", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty: # Check if the globally loaded data (now local df) is empty
         return go.Figure().update_layout(title_text="No data available for Regional Map", plot_bgcolor='white', paper_bgcolor='white')
 
     if segment_filter != 'All Segments':
@@ -395,9 +414,12 @@ def create_regional_map(df, segment_filter='All Segments', wtp_price_point=139):
     return fig
 
 # 3. Expansion Priority Matrix
-# (Function remains the same as previous version)
-def create_expansion_matrix(df, segment_filter='All Segments', wtp_price_point=139):
-    if df is None or df.empty:
+def create_expansion_matrix(segment_filter='All Segments', wtp_price_point=139): # Removed df argument
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Expansion Matrix", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty: # Check if the globally loaded data (now local df) is empty
         return go.Figure().update_layout(title_text="No data available for Expansion Matrix", plot_bgcolor='white', paper_bgcolor='white')
 
     if segment_filter != 'All Segments':
@@ -494,9 +516,13 @@ def create_expansion_matrix(df, segment_filter='All Segments', wtp_price_point=1
 
 # 4. Price Sensitivity Curves (Van Westendorp) - FINAL REVISION -> INVERTED STYLE
 # Implements inverted VW curves, requested labels/colors, and shaded region
-def create_vw_chart(df, segment_filter='All Segments', group_filter=None):
+def create_vw_chart(segment_filter='All Segments', group_filter=None): # Removed df argument
     """Creates an inverted Van Westendorp chart with user-specified labels and shaded acceptable range."""
-    if df is None or df.empty:
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Van Westendorp chart", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty: # Check if the globally loaded data (now local df) is empty
         return go.Figure().update_layout(title_text="No data available for Van Westendorp chart", plot_bgcolor='white', paper_bgcolor='white')
 
     # --- Filtering logic remains the same ---
@@ -684,9 +710,13 @@ def create_vw_chart(df, segment_filter='All Segments', group_filter=None):
 
 
 # 5. NEW: Regression Coefficient Plot (Code unchanged from previous corrected version)
-def create_regression_coef_plot(df):
+def create_regression_coef_plot(): # Removed df argument
     """Runs OLS regression and creates a coefficient plot."""
-    if df is None or df.empty:
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Regression Analysis", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty: # Check if the globally loaded data (now local df) is empty
         return go.Figure().update_layout(title_text="No data for Regression Analysis", plot_bgcolor='white', paper_bgcolor='white')
 
     try:
@@ -798,9 +828,12 @@ def create_regression_coef_plot(df):
 
 
 # 7. Top 3 Drivers Chart (Cross-Segment) - Renumbered
-# (Function remains the same as previous version)
-def create_top_drivers_chart(df):
-    if df is None or df.empty or not all(c in df.columns for c in ['Segment', 'Top3Driver1', 'Top3Driver2', 'Top3Driver3']):
+def create_top_drivers_chart(): # Removed df argument
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Top Drivers Chart", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty or not all(c in df.columns for c in ['Segment', 'Top3Driver1', 'Top3Driver2', 'Top3Driver3']):
         return go.Figure().update_layout(title_text="Insufficient data for Top Drivers Chart", plot_bgcolor='white', paper_bgcolor='white')
     try:
         df_melt = df.melt(
@@ -845,9 +878,12 @@ def create_top_drivers_chart(df):
 
 
 # 8. Primary Usage Chart (Cross-Segment) - Renumbered
-# (Function remains the same as previous version)
-def create_primary_usage_chart(df):
-    if df is None or df.empty or not all(c in df.columns for c in ['Segment', 'PrimaryUsage']):
+def create_primary_usage_chart(): # Removed df argument
+    if app_data is None: # Check global
+        return go.Figure().update_layout(title_text="Data unavailable for Primary Usage Chart", plot_bgcolor='white', paper_bgcolor='white')
+    df = app_data # Use global data
+
+    if df.empty or not all(c in df.columns for c in ['Segment', 'PrimaryUsage']):
         return go.Figure().update_layout(title_text="Insufficient data for Primary Usage Chart", plot_bgcolor='white', paper_bgcolor='white')
     try:
         df_usage = df.dropna(subset=['Segment', 'PrimaryUsage'])
@@ -881,12 +917,12 @@ def create_primary_usage_chart(df):
         print(f"Error creating Primary Usage chart: {e}")
         return go.Figure().update_layout(title_text=f"Error generating Primary Usage chart: {e}", plot_bgcolor='white', paper_bgcolor='white')
 
-
+print("Defining app layout...")
 # --- App Layout ---
 # Layout structure remains the same, only the VW chart function call changes behavior
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
-    dcc.Store(id='dummy-store'),
+    # dcc.Store(id='dummy-store'), # Removed dummy-store
     dcc.Store(id='selected-values-store'),
     dcc.Store(id='limitation-content-store'), # <-- NEW Store
     html.Div(id='dummy-output', style={'display': 'none'}),
@@ -1917,6 +1953,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
     style=CONTENT_STYLE
     ) # <-- FIXED: Added missing closing parenthesis for the page-content html.Div
 ]) # <-- Closing bracket and parenthesis for the overall app.layout html.Div
+print("App layout defined.")
 
 # Define the callback function
 # Output list and function signature remain the same as the previous version
@@ -1932,21 +1969,25 @@ This chart tells you **which factors significantly push the "Expensive" price po
         Output("primary-usage-chart", "figure")
     ],
     [
-        Input("dummy-store", "data"),
+        # Input("dummy-store", "data"), # Removed dummy-store input
         Input("selected-values-store", "data")
     ]
 )
-def update_visualizations(stored_data, selected_values):
+def update_visualizations(selected_values): # Removed stored_data argument
     triggered_id = ctx.triggered_id
     print(f"Update visualizations triggered by: {triggered_id}")
 
-    no_data_fig = go.Figure().update_layout(title_text="Waiting for data...", xaxis={'visible': False}, yaxis={'visible': False}, plot_bgcolor='white', paper_bgcolor='white')
-    num_outputs = 8
-    default_return = [no_data_fig] * num_outputs
+    no_data_fig = go.Figure().update_layout(title_text="Data not available", xaxis={'visible': False}, yaxis={'visible': False}, plot_bgcolor='white', paper_bgcolor='white')
+    num_outputs = 8 # Ensure this matches the number of outputs
 
-    if stored_data is None or selected_values is None:
-        print("Update Viz: No data in store or selected values.")
-        return default_return
+    if app_data is None: # Check global app_data
+        print("Callback update_visualizations skipped: Global data not available.")
+        return [no_data_fig] * num_outputs
+
+    # if stored_data is None or selected_values is None: # stored_data no longer used
+    if selected_values is None:
+        print("Update Viz: No selected values.")
+        return [no_data_fig] * num_outputs
 
     error_fig = go.Figure().update_layout(title_text="Error generating chart", xaxis={'visible': False}, yaxis={'visible': False}, plot_bgcolor='white', paper_bgcolor='white')
     vw_fig_control, vw_fig_test, wtp_fig, map_fig, matrix_fig, reg_fig, drivers_fig, usage_fig = [error_fig] * num_outputs
@@ -1954,26 +1995,27 @@ def update_visualizations(stored_data, selected_values):
     try:
         selected_segment = selected_values.get('segment', 'All Segments')
         selected_price = selected_values.get('wtp', 139)
-        df = pd.DataFrame(stored_data)
+        # df = pd.DataFrame(stored_data) # No longer needed, use global app_data
+        df = app_data # Use global app_data directly
         if df.empty:
-            print("Update Viz: Dataframe is empty.")
-            return default_return
+            print("Update Viz: Global dataframe is empty.") # Changed message to reflect global data
+            return [no_data_fig] * num_outputs
 
         # --- Generate ALL Charts ---
-        # Cross-Segment Charts (use full df)
+        # Cross-Segment Charts (use full df from global app_data)
         print(f"Update Viz: Rendering cross-segment charts")
-        reg_fig = create_regression_coef_plot(df)
-        drivers_fig = create_top_drivers_chart(df)
-        usage_fig = create_primary_usage_chart(df)
+        reg_fig = create_regression_coef_plot() # df argument removed
+        drivers_fig = create_top_drivers_chart() # df argument removed
+        usage_fig = create_primary_usage_chart() # df argument removed
 
         # Segment-Filterable Charts
         print(f"Update Viz: Rendering filterable charts for Segment='{selected_segment}', Price=${selected_price}")
         # Calls to create_vw_chart now use the latest revised version (inverted)
-        vw_fig_control = create_vw_chart(df, selected_segment, group_filter='Control')
-        vw_fig_test = create_vw_chart(df, selected_segment, group_filter='Test')
-        wtp_fig = create_wtp_gg_chart(df, selected_segment)
-        map_fig = create_regional_map(df, selected_segment, selected_price)
-        matrix_fig = create_expansion_matrix(df, selected_segment, selected_price)
+        vw_fig_control = create_vw_chart(selected_segment, group_filter='Control') # df argument removed
+        vw_fig_test = create_vw_chart(selected_segment, group_filter='Test') # df argument removed
+        wtp_fig = create_wtp_gg_chart(selected_segment) # df argument removed
+        map_fig = create_regional_map(selected_segment, selected_price) # df argument removed
+        matrix_fig = create_expansion_matrix(selected_segment, selected_price) # df argument removed
 
     except Exception as e:
         print(f"Error during visualization update: {e}")
@@ -1998,17 +2040,24 @@ def toggle_my_role_collapse(n, is_open): return not is_open if n else is_open
 def toggle_visualizations_collapse(n, is_open): return not is_open if n else is_open
 
 # Callback for Sample Data Table (Keep)
-@app.callback(Output("collapse", "is_open"), Output("sample-data-table", "children"), Input("collapse-button", "n_clicks"), State("collapse", "is_open"), State("dummy-store", "data"), prevent_initial_call=True)
-def toggle_collapse_and_show_data(n, is_open, stored_data):
+@app.callback(
+    Output("collapse", "is_open"),
+    Output("sample-data-table", "children"),
+    Input("collapse-button", "n_clicks"),
+    State("collapse", "is_open"),
+    # State("dummy-store", "data"), # Removed State for dummy-store
+    prevent_initial_call=True
+)
+def toggle_collapse_and_show_data(n, is_open): # Removed stored_data argument
     if n:
-        table_content = "Data could not be loaded from the store."
-        if stored_data:
+        table_content = "Global data could not be loaded." # Updated message
+        if app_data is not None: # Check global app_data
             try:
-                df = pd.DataFrame(stored_data)
-                sample_df = df.head(10)
+                # app_data is already a DataFrame
+                sample_df = app_data.head(10)
                 table_content = html.Div(dbc.Table.from_dataframe(sample_df, striped=True, bordered=True, hover=True, responsive=False, className='table-sm'), style={'overflowX': 'auto'})
             except Exception as e:
-                print(f"Error creating sample data table: {e}")
+                print(f"Error creating sample data table from global app_data: {e}")
                 table_content = f"Error displaying data: {e}"
         return not is_open, table_content
     return is_open, dash.no_update
@@ -2969,9 +3018,101 @@ def update_limitation_info(n_clicks_list, tab_ids, stored_limitations_content):
     return new_content, new_title, new_class_names # Return content, title, and class names
 # --- END: Revised Limitation Callback ---
 
+# --- Callbacks for populating stores and options ---
+# Removed store_data_on_load callback
+
+# --- Populate Limitation Content Store on Load ---
+@app.callback(Output('limitation-content-store', 'data'), Input('url', 'pathname'))
+def store_limitations_content_on_load(pathname):
+    print("Storing limitations content...")
+    return limitations_content
+# --- END: Populate Limitation Store ---
+
+@app.callback(Output('selected-values-store', 'data'), Input('url', 'pathname'))
+def init_selected_values(pathname):
+     print("Initializing selected-values-store...")
+     return {'segment': 'All Segments', 'wtp': 139}
+
+@app.callback(
+    Output('segment-options-container', 'children'),
+    Input('url', 'pathname') # Changed from dummy-store to url
+)
+def update_segment_options(pathname): # Removed stored_data argument
+    if app_data is not None: # Use global app_data
+        # df = pd.DataFrame(stored_data) # No longer needed
+        df = app_data # Use global app_data directly
+        if 'Segment' in df.columns:
+            segments = ['All Segments'] + sorted(df['Segment'].unique())
+            options = [
+                html.Div(
+                    segment,
+                    id={'type': 'segment-option', 'index': segment},
+                    className="segment-option" + (" active" if segment == 'All Segments' else "")
+                 ) for segment in segments
+            ]
+            return options
+    return "Data not available for segments." # Updated message for failure
+
+@app.callback(
+    Output('wtp-options-container', 'children'),
+    Input('url', 'pathname')
+)
+def update_wtp_options(pathname):
+    default_wtp = 139
+    options = [
+        html.Div(
+            f"${p}",
+            id={'type': 'wtp-option', 'index': p},
+            className="wtp-option" + (" active" if p == default_wtp else "")
+        ) for p in [79, 99, 119, 139, 159, 179, 199]
+    ]
+    return options
+
+@app.callback(
+    Output('selected-values-store', 'data', allow_duplicate=True),
+    Output({'type': 'segment-option', 'index': ALL}, 'className'),
+    Output({'type': 'wtp-option', 'index': ALL}, 'className'),
+    Input({'type': 'segment-option', 'index': ALL}, 'n_clicks'),
+    Input({'type': 'wtp-option', 'index': ALL}, 'n_clicks'),
+    State('selected-values-store', 'data'),
+    State({'type': 'segment-option', 'index': ALL}, 'id'),
+    State({'type': 'wtp-option', 'index': ALL}, 'id'),
+    prevent_initial_call=True
+)
+def update_selected_values_and_styles(segment_clicks, wtp_clicks, current_values, segment_ids, wtp_ids):
+    triggered_id = ctx.triggered_id
+    print(f"Toolbar update triggered by: {triggered_id}")
+    if not triggered_id: raise dash.exceptions.PreventUpdate
+    if isinstance(triggered_id, str): raise dash.exceptions.PreventUpdate
+
+    current_segment = current_values.get('segment', 'All Segments')
+    current_wtp = current_values.get('wtp', 139)
+    new_values = current_values.copy()
+
+    prop_id = triggered_id.get('index')
+    type_id = triggered_id.get('type')
+
+    if type_id == 'segment-option' and prop_id is not None:
+        new_values['segment'] = prop_id
+        print(f"Segment selected: {new_values['segment']}")
+    elif type_id == 'wtp-option' and prop_id is not None:
+        new_values['wtp'] = prop_id
+        print(f"WTP selected: {new_values['wtp']}")
+    else:
+        raise dash.exceptions.PreventUpdate
+
+    segment_classes = [
+        "segment-option active" if seg_id['index'] == new_values['segment'] else "segment-option"
+        for seg_id in segment_ids
+    ]
+    wtp_classes = [
+        "wtp-option active" if wtp_id['index'] == new_values['wtp'] else "wtp-option"
+        for wtp_id in wtp_ids
+    ]
+    return new_values, segment_classes, wtp_classes
+
 
 # --- Run the App Server ---
-# (Startup logic remains unchanged from previous version)
 if __name__ == '__main__':
     try:
         import statsmodels
@@ -2986,106 +3127,13 @@ if __name__ == '__main__':
         print("\n*** ACTION NEEDED: Created 'assets' folder. ***")
         print(f"*** Please move your images ('final flowchart.png', 'conjoint_rejection_discussion.png', etc.) to this folder. ***\n")
 
-    if not os.path.exists(DATA_FILE):
-        print(f"\n*** FATAL ERROR: Data file '{DATA_FILE}' not found. Dashboard cannot run. ***\n")
+    # Global app_data is already loaded or None at this point.
+    # Callbacks are defined globally.
+
+    if app_data is None:
+        # Message already printed by global load attempt if it failed (e.g. file not found, CSV error)
+        print(f"\n*** WARNING: Global data loading failed (or file '{DATA_FILE}' not found/unreadable). Dashboard will run with limited functionality. ***\n")
     else:
-        app_data = load_data(DATA_FILE)
-        if app_data is not None:
-             @app.callback(Output('dummy-store', 'data'), Input('url', 'pathname'))
-             def store_data_on_load(pathname):
-                 print("Storing data in dummy-store...")
-                 return app_data.to_dict('records')
+        print(f"Global data from '{DATA_FILE}' successfully loaded. Starting server...")
 
-             # --- Populate Limitation Content Store on Load ---
-             @app.callback(Output('limitation-content-store', 'data'), Input('url', 'pathname'))
-             def store_limitations_content_on_load(pathname):
-                 print("Storing limitations content...")
-                 return limitations_content
-             # --- END: Populate Limitation Store ---
-
-             @app.callback(Output('selected-values-store', 'data'), Input('url', 'pathname'))
-             def init_selected_values(pathname):
-                  print("Initializing selected-values-store...")
-                  return {'segment': 'All Segments', 'wtp': 139}
-
-             @app.callback(
-                 Output('segment-options-container', 'children'),
-                 Input('dummy-store', 'data')
-             )
-             def update_segment_options(stored_data):
-                 if stored_data:
-                     df = pd.DataFrame(stored_data)
-                     if 'Segment' in df.columns:
-                         segments = ['All Segments'] + sorted(df['Segment'].unique())
-                         options = [
-                             html.Div(
-                                 segment,
-                                 id={'type': 'segment-option', 'index': segment},
-                                 className="segment-option" + (" active" if segment == 'All Segments' else "")
-                              ) for segment in segments
-                         ]
-                         return options
-                 return "Loading segments..."
-
-             @app.callback(
-                 Output('wtp-options-container', 'children'),
-                 Input('url', 'pathname')
-             )
-             def update_wtp_options(pathname):
-                 default_wtp = 139
-                 options = [
-                     html.Div(
-                         f"${p}",
-                         id={'type': 'wtp-option', 'index': p},
-                         className="wtp-option" + (" active" if p == default_wtp else "")
-                     ) for p in [79, 99, 119, 139, 159, 179, 199]
-                 ]
-                 return options
-
-             @app.callback(
-                 Output('selected-values-store', 'data', allow_duplicate=True),
-                 Output({'type': 'segment-option', 'index': ALL}, 'className'),
-                 Output({'type': 'wtp-option', 'index': ALL}, 'className'),
-                 Input({'type': 'segment-option', 'index': ALL}, 'n_clicks'),
-                 Input({'type': 'wtp-option', 'index': ALL}, 'n_clicks'),
-                 State('selected-values-store', 'data'),
-                 State({'type': 'segment-option', 'index': ALL}, 'id'),
-                 State({'type': 'wtp-option', 'index': ALL}, 'id'),
-                 prevent_initial_call=True
-             )
-             def update_selected_values_and_styles(segment_clicks, wtp_clicks, current_values, segment_ids, wtp_ids):
-                 triggered_id = ctx.triggered_id
-                 print(f"Toolbar update triggered by: {triggered_id}")
-                 if not triggered_id: raise dash.exceptions.PreventUpdate
-                 if isinstance(triggered_id, str): raise dash.exceptions.PreventUpdate
-
-                 current_segment = current_values.get('segment', 'All Segments')
-                 current_wtp = current_values.get('wtp', 139)
-                 new_values = current_values.copy()
-
-                 prop_id = triggered_id.get('index')
-                 type_id = triggered_id.get('type')
-
-                 if type_id == 'segment-option' and prop_id is not None:
-                     new_values['segment'] = prop_id
-                     print(f"Segment selected: {new_values['segment']}")
-                 elif type_id == 'wtp-option' and prop_id is not None:
-                     new_values['wtp'] = prop_id
-                     print(f"WTP selected: {new_values['wtp']}")
-                 else:
-                     raise dash.exceptions.PreventUpdate
-
-                 segment_classes = [
-                     "segment-option active" if seg_id['index'] == new_values['segment'] else "segment-option"
-                     for seg_id in segment_ids
-                 ]
-                 wtp_classes = [
-                     "wtp-option active" if wtp_id['index'] == new_values['wtp'] else "wtp-option"
-                     for wtp_id in wtp_ids
-                 ]
-                 return new_values, segment_classes, wtp_classes
-
-             print(f"Data file '{DATA_FILE}' found and loaded. Starting server...")
-             app.run_server(debug=True, port=8051)
-        else:
-            print(f"\n*** ERROR: Failed to load data from '{DATA_FILE}'. Dashboard cannot run. ***\n")
+    app.run_server(debug=True, port=8051)
