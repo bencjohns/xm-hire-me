@@ -2732,14 +2732,20 @@ app.index_string = '''
             {%renderer%}
         </footer>
         <script>
+         // --- Start of Script Block ---
+         console.log('>>> Executing index_string script block <<<'); // Check if script starts
+
          window.addEventListener('load', function() {
-              // Function to handle arrow rotation using MutationObserver
+              console.log('>>> Load event listener fired <<<'); // Check if load event runs
+
+              // --- Existing Function to handle arrow rotation ---
                 function setupArrowObserver(collapseId, navLinkId) {
                     const collapseElement = document.getElementById(collapseId);
                     const navLinkElement = document.getElementById(navLinkId);
                     const arrowElement = navLinkElement ? navLinkElement.querySelector('.nav-arrow') : null;
 
                     if (!collapseElement || !arrowElement || !navLinkElement) {
+                        // console.warn("Observer setup skipped for:", collapseId, navLinkId); // Optional: debug if observers fail
                         return;
                     }
 
@@ -2756,129 +2762,172 @@ app.index_string = '''
                     arrowElement.style.transform = isInitiallyShown ? 'rotate(180deg)' : 'rotate(0deg)';
                 }
 
+                 // Setup observers for all collapsible sections
                  setupArrowObserver('collapse-overview', 'nav-overview');
                  setupArrowObserver('collapse-methodology', 'nav-methodology-design');
                  setupArrowObserver('collapse-my-role', 'nav-my-role');
                  setupArrowObserver('collapse-visualizations', 'nav-visualizations');
+              // --- End Arrow Observer Setup ---
 
-
+              // --- Element Finding and Listener Setup ---
                 const navLinks = document.querySelectorAll('.dashboard-sidebar .nav-link');
+                console.log('>>> Selector used for navLinks:', '.dashboard-sidebar .nav-link'); 
+                console.log('>>> Found navLinks count:', navLinks.length); 
+
                 const scrollContainer = document.getElementById('page-content');
+                console.log('>>> ID used for scrollContainer:', 'page-content'); 
+                console.log('>>> Found scrollContainer:', scrollContainer ? scrollContainer.id : 'null'); 
 
                 window.clickNavInProgress = false;
 
+                if (navLinks.length === 0) {
+                    console.error(">>> ERROR: Could not find any elements matching '.dashboard-sidebar .nav-link'"); 
+                }
+                if (!scrollContainer) {
+                   console.error(">>> ERROR: Could not find element with ID 'page-content'"); 
+                }
+
+                // --- Attach Click Listeners ---
                 navLinks.forEach(function(link) {
-                    link.addEventListener('click', function(e) {
+                   console.log('>>> Attaching listener to:', link.id || link.href); 
+                   
+                   link.addEventListener('click', function(e) {
+                        // ***** First log inside the click handler *****
+                        console.log('>>> Click event FIRED for:', this.id || this.href); 
+                        // *********************************************
+
                         const href = this.getAttribute('href');
-                        console.log('NavLink clicked:', href);
+                        
+                        console.log('>>> Click handler: Got href:', href); // Log the href found
+
                         if (href && href.startsWith('#')) {
-                            e.preventDefault();
+                            console.log('>>> Click handler: Preventing default for hash link.');
+                            e.preventDefault(); // Prevent default only if it's a valid hash link
+
                             const isParent = this.classList.contains('parent-nav-link');
-                             if (isParent && document.getElementById(href.substring(1))) {
-                                const targetId = href.substring(1);
-                                const targetElement = document.getElementById(targetId);
-                                const currentScrollContainer = document.getElementById('page-content');
-                                console.log('Parent NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
+                            console.log('>>> Click handler: Is parent link?', isParent); // Log if it's a parent
 
-                                if (targetElement && currentScrollContainer) {
-                                    window.clickNavInProgress = true;
-                                    const containerRect = currentScrollContainer.getBoundingClientRect();
-                                    const targetRect = targetElement.getBoundingClientRect();
-                                    const scrollPosition = currentScrollContainer.scrollTop;
-                                    const targetTopRelativeToContainer = targetRect.top - containerRect.top;
-                                    const offset = 20;
-                                    let scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
-
-                                    console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
-                                    // --- MODIFIED: Removed behavior: 'smooth' ---
-                                    currentScrollContainer.scrollTo({ top: scrollTo });
-                                    // --- MODIFIED: Moved history.pushState outside timeout ---
-                                    if (history.pushState) {
-                                        console.log('Parent NavLink - Pushing history state for:', href);
-                                        history.pushState(null, null, href);
-                                    }
-
-                                    setTimeout(() => {
-                                        window.clickNavInProgress = false;
-                                        console.log('Parent NavLink - clickNavInProgress set to false for:', href);
-                                    }, 100); // Shorter timeout might be okay now
-                                }  else {
-                                    console.warn('Parent NavLink - Scroll skipped: target or scrollContainer not found for', href);
-                                }
-                                return;
-                            } else if (isParent){
-                                console.log('Parent NavLink - No direct section, updating hash for collapse for:', href);
-                                setTimeout(() => {
-                                    if (history.pushState) { history.pushState(null, null, href); }
-                                }, 0);
-                                return;
-                            }
-
-                            // Handle nested links
                             const targetId = href.substring(1);
                             const targetElement = document.getElementById(targetId);
-                            const currentScrollContainer = document.getElementById('page-content');
-                            console.log('Nested NavLink - Target Element:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
+                           
+                            // Use the scrollContainer found earlier in the load handler scope
+                            console.log('>>> Click handler: Checking elements: targetId=', targetId, ' targetElement=', targetElement, ' scrollContainer=', scrollContainer);
 
-                            if (targetElement && currentScrollContainer) {
-                                window.clickNavInProgress = true;
-                                const containerRect = currentScrollContainer.getBoundingClientRect();
+                            // --- Parent Link Logic ---
+                             if (isParent && targetElement) { 
+                                console.log('>>> Click handler: Entering PARENT link scroll logic.');
+                                if (scrollContainer) { 
+                                    window.clickNavInProgress = true;
+                                    // Calculation for parent links (simplified)
+                                    const containerRect = scrollContainer.getBoundingClientRect();
+                                    const targetRect = targetElement.getBoundingClientRect();
+                                    const scrollPosition = scrollContainer.scrollTop;
+                                    const targetTopRelativeToContainer = targetRect.top - containerRect.top;
+                                    const offset = 20; // Standard offset
+                                    let scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
+                                    scrollTo = Math.max(0, scrollTo); // Ensure not scrolling above top
+
+                                    // Log computed style before scrolling
+                                    const computedStyle = window.getComputedStyle(scrollContainer);
+                                    console.log('(ParentClick) Current scroll container ID:', scrollContainer.id); 
+                                    console.log('(ParentClick) Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
+                                    
+                                    console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
+                                    scrollContainer.scrollTo({ top: scrollTo }); // NO behavior property
+                                    
+                                    // History state and timeout
+                                    if (history.pushState) {
+                                        history.pushState(null, null, href);
+                                    }
+                                    setTimeout(() => {
+                                        window.clickNavInProgress = false;
+                                    }, 100); 
+
+                                } else { 
+                                    console.warn('ParentScroll Logic: scrollContainer missing!');
+                                }
+                                // Parent link handled (scrolled), exit the click handler for this case
+                                return; 
+
+                            } else if (isParent){ // Parent link but no direct section target (e.g., just collapse trigger)
+                                console.log('>>> Click handler: Entering PARENT link NO SCROLL logic (just hash update).');
+                                // Update hash for potential state changes or collapse triggering
+                                setTimeout(() => { // Use timeout 0 to allow default action then update hash
+                                    if (history.pushState) { history.pushState(null, null, href); }
+                                }, 0);
+                                // Parent link handled (no scroll), exit the click handler
+                                return; 
+                            }
+                             
+                            // --- Nested Link Logic (Executes only if NOT a parent link handled above) ---
+                            else if (targetElement && scrollContainer) { 
+                                console.log('>>> Click handler: Entering NESTED link scroll logic.');
+                                window.clickNavInProgress = true; 
+                                // Calculation logic for nested links
+                                const containerRect = scrollContainer.getBoundingClientRect();
                                 const targetRect = targetElement.getBoundingClientRect();
-                                const scrollPosition = currentScrollContainer.scrollTop;
+                                const scrollPosition = scrollContainer.scrollTop;
                                 const targetTopRelativeToContainer = targetRect.top - containerRect.top;
                                 let scrollTo;
-                                const offset = 20;
-
+                                const offset = 20; // Standard offset
+                                // Specific centering logic for certain containers
                                 if (targetId.includes('-chart-container') || targetId === 'limitations-info-container' || targetId === 'segment-info-container') {
                                     const targetHeight = targetRect.height;
                                     const containerHeight = containerRect.height;
                                     scrollTo = scrollPosition + targetTopRelativeToContainer - (containerHeight / 2) + (targetHeight / 2);
                                     scrollTo = Math.max(0, scrollTo);
-                                    scrollTo = Math.min(currentScrollContainer.scrollHeight - containerHeight, scrollTo);
+                                    scrollTo = Math.min(scrollContainer.scrollHeight - containerHeight, scrollTo); // Prevent overscroll
                                 } else {
-                                    scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
+                                    scrollTo = scrollPosition + targetTopRelativeToContainer - offset; // Standard offset scroll
+                                    scrollTo = Math.max(0, scrollTo); // Ensure not scrolling above top
                                 }
 
-                                const computedStyle = window.getComputedStyle(currentScrollContainer);
-                                console.log('(NestedClick) Current scroll container ID:', currentScrollContainer.id); 
+                                // Log computed style before scrolling
+                                const computedStyle = window.getComputedStyle(scrollContainer);
+                                console.log('(NestedClick) Current scroll container ID:', scrollContainer.id); 
                                 console.log('(NestedClick) Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
 
                                 console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
-                                // --- MODIFIED: Removed behavior: 'smooth' ---
-                                currentScrollContainer.scrollTo({ top: scrollTo });
-                                // --- MODIFIED: Moved history.pushState outside timeout ---
+                                scrollContainer.scrollTo({ top: scrollTo }); // NO behavior property
+
+                                // History state and timeout
                                 if (history.pushState) {
-                                    console.log('Nested NavLink - Pushing history state for:', href);
                                     history.pushState(null, null, href);
                                 }
-
                                 setTimeout(() => {
                                     window.clickNavInProgress = false;
-                                    console.log('Nested NavLink - clickNavInProgress set to false for:', href);
-                                }, 100); // Shorter timeout might be okay now
-                            } else {
-                                console.warn('Nested NavLink - Scroll skipped: target or scrollContainer not found for', href);
-                            }
-                        }
-                    });
-                });
+                                }, 100);
 
+                            } else { // Target element or scroll container missing for nested link
+                                console.warn('>>> Click handler: NESTED link scroll skipped. targetElement=', targetElement, ' scrollContainer=', scrollContainer);
+                            }
+                        } else { // Link has no href or doesn't start with #
+                           console.log('>>> Click handler: Ignoring click on non-hash link or link without href:', link);
+                        }
+                   }); // End of click event listener
+              }); // End of navLinks.forEach
+              // --- End Attach Click Listeners ---
+
+
+              // --- Initial Hash Scroll Logic ---
                 const initialHash = window.location.hash;
                 if (initialHash && initialHash !== '#') {
                     const targetId = initialHash.substring(1);
+                    console.log(">>> Initial hash detected:", initialHash); // Log hash detection
                     const scrollToTarget = () => {
+                         console.log(">>> scrollToTarget function executing for:", targetId); // Log function start
                         try {
-                            const currentScrollContainer = document.getElementById('page-content');
+                            // Use the scrollContainer found earlier
                             const targetElement = document.getElementById(targetId);
-                            console.log('Initial Scroll - Target:', targetElement ? targetElement.id : 'null', 'Scroll Container:', currentScrollContainer ? 'found' : 'null');
+                            console.log('Initial Scroll - Target:', targetElement ? targetElement.id : 'null', 'Scroll Container:', scrollContainer ? 'found' : 'null');
 
-                            if (!currentScrollContainer || !targetElement) {
+                            if (!scrollContainer || !targetElement) {
                                 console.warn('Initial scroll aborted: target or container missing for', targetId);
                                 return;
                             }
-                             const containerRect = currentScrollContainer.getBoundingClientRect();
+                             const containerRect = scrollContainer.getBoundingClientRect();
                              const targetRect = targetElement.getBoundingClientRect();
-                             const scrollPosition = currentScrollContainer.scrollTop;
+                             const scrollPosition = scrollContainer.scrollTop;
                              const targetTopRelativeToContainer = targetRect.top - containerRect.top;
                              let scrollTo;
                              const offset = 20;
@@ -2888,133 +2937,179 @@ app.index_string = '''
                                  const containerHeight = containerRect.height;
                                  scrollTo = scrollPosition + targetTopRelativeToContainer - (containerHeight / 2) + (targetHeight / 2);
                                  scrollTo = Math.max(0, scrollTo);
-                                 scrollTo = Math.min(currentScrollContainer.scrollHeight - containerHeight, scrollTo);
+                                 scrollTo = Math.min(scrollContainer.scrollHeight - containerHeight, scrollTo);
                              } else {
                                  scrollTo = scrollPosition + targetTopRelativeToContainer - offset;
+                                 scrollTo = Math.max(0, scrollTo); // Ensure not scrolling above top
                              }
                              
-                             const computedStyle = window.getComputedStyle(currentScrollContainer);
-                             console.log('Current scroll container ID:', currentScrollContainer.id); // Added ID for clarity
-                             console.log('Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
+                             // Log computed style before initial scroll
+                             const computedStyle = window.getComputedStyle(scrollContainer);
+                             console.log('(InitialScroll) Current scroll container ID:', scrollContainer.id); 
+                             console.log('(InitialScroll) Computed scroll-behavior BEFORE scroll:', computedStyle.scrollBehavior);
 
                              console.log('Initial scrolling to:', scrollTo, 'for target:', targetId);
-                              // --- MODIFIED: Ensured behavior is 'auto' (or absent) ---
-                             currentScrollContainer.scrollTo({ top: scrollTo });
+                             scrollContainer.scrollTo({ top: scrollTo }); // NO behavior property
+
                          } catch (e) {
                             console.error("Error during initial scroll:", e);
                          }
-                     };
+                     }; // End of scrollToTarget function definition
 
-                    const targetElement = document.getElementById(targetId);
+                    // Logic to potentially expand parent and delay scroll
+                    const targetElement = document.getElementById(targetId); // Check element exists before proceeding
                      if (targetElement) {
+                         console.log(">>> Initial scroll: Target element found:", targetId);
                          const parentCollapse = targetElement.closest('.collapse:not(.show)');
                          let needsExpand = false;
                          let controllingNavLinkId = null;
                          if(parentCollapse){
+                             console.log(">>> Initial scroll: Target is inside a collapsed section:", parentCollapse.id);
                              const collapseId = parentCollapse.id;
-                              const potentialNavLink = document.querySelector(`.nav-link.parent-nav-link[data-bs-target="#${collapseId}"]`);
-                              let parentNavLink = potentialNavLink;
-                              if (!parentNavLink) {
-                                 const parentId = collapseId.replace('collapse-', '');
-                                 parentNavLink = document.querySelector(`.nav-link.parent-nav-link[href="#${parentId}"]`);
-                                 if (!parentNavLink) {
-                                      parentNavLink = document.querySelector(`.nav-link.parent-nav-link[href="#${collapseId.replace('collapse-', '')}"]`);
-                                 }
-                              }
-                             if (parentNavLink) {
-                                controllingNavLinkId = parentNavLink.id;
+                              // Try finding controlling nav link more robustly
+                              const potentialNavLink = document.querySelector(`.nav-link.parent-nav-link[data-bs-target="#${collapseId}"]`) || 
+                                                     document.querySelector(`.nav-link.parent-nav-link[href="#${collapseId.replace('collapse-','') }"]`);
+                              
+                             if (potentialNavLink) {
+                                controllingNavLinkId = potentialNavLink.id;
                                 needsExpand = true;
+                                console.log(">>> Initial scroll: Found controlling parent nav link:", controllingNavLinkId);
+                             } else {
+                                console.warn(">>> Initial scroll: Could not find controlling nav link for collapse:", collapseId);
                              }
                          }
 
                         if (needsExpand && controllingNavLinkId) {
+                            console.log(">>> Initial scroll: Needs expand. Clicking parent link and delaying scroll.");
                             const parentNavLink = document.getElementById(controllingNavLinkId);
                             if (parentNavLink) {
-                                parentNavLink.click();
-                                setTimeout(scrollToTarget, 450);
+                                // Using a very short timeout to allow the click handler to potentially run first
+                                // then trigger the collapse, then scroll after collapse animation might start.
+                                setTimeout(() => parentNavLink.click(), 10); // Click after slight delay
+                                setTimeout(scrollToTarget, 450); // Scroll after collapse animation duration
                             } else {
-                                setTimeout(scrollToTarget, 150);
+                                console.warn(">>> Initial scroll: Controlling nav link element not found by ID:", controllingNavLinkId);
+                                setTimeout(scrollToTarget, 150); // Fallback scroll if link not found
                             }
                         } else {
-                             setTimeout(scrollToTarget, 150);
+                             console.log(">>> Initial scroll: No expand needed or target not in collapsed section. Scrolling directly.");
+                             setTimeout(scrollToTarget, 150); // Scroll after a short delay to ensure layout is stable
                         }
+                     } else {
+                         console.warn(">>> Initial scroll: Target element not found for hash:", initialHash);
                      }
-                 }
+                 } // End if(initialHash)
+              // --- End Initial Hash Scroll ---
 
-                // --- Floating Visualization Toolbar Implementation (ORIGINAL) ---
+
+              // --- Floating Toolbar Logic ---
                  function setupFloatingToolbar() {
+                     console.log(">>> setupFloatingToolbar executing"); // Log toolbar setup start
                      const visualizationsSection = document.getElementById('visualizations');
                      const floatingToolbar = document.getElementById('floating-viz-toolbar');
                      const sidebar = document.querySelector('.dashboard-sidebar');
-                     const firstChartCard = document.querySelector('#van-westendorp-chart-control').closest('.chart-card');
+                      // Ensure the selector targets an element that exists when this runs
+                     const firstChartCard = document.querySelector('#vw-chart-control-container'); // Changed selector
 
                      if (!visualizationsSection || !floatingToolbar || !sidebar || !firstChartCard) {
+                          console.warn(">>> Floating toolbar setup skipped: one or more elements not found.", 
+                                       {visualizationsSection, floatingToolbar, sidebar, firstChartCard}); // Log which element is missing
                          return;
                      }
+                     console.log(">>> Floating toolbar: All required elements found.");
 
                      function positionToolbar() {
+                         // console.log(">>> positionToolbar executing"); // Can be noisy, uncomment if needed
                          try {
                              const sidebarRect = sidebar.getBoundingClientRect();
-                             const chartRect = firstChartCard.getBoundingClientRect();
+                             const chartRect = firstChartCard.getBoundingClientRect(); // Use the verified element
                              const toolbarWidth = floatingToolbar.offsetWidth;
                              const sidebarRight = sidebarRect.right;
                              const chartLeft = chartRect.left;
                              const availableSpace = chartLeft - sidebarRight;
 
-                             if (availableSpace > toolbarWidth + 32) {
-                                 const desiredLeft = sidebarRight + (availableSpace / 2) - (toolbarWidth / 2);
-                                 floatingToolbar.style.left = `${desiredLeft}px`;
-                             } else {
-                                 floatingToolbar.style.left = `${sidebarRight + 16}px`;
+                             let desiredLeft;
+                             if (availableSpace > toolbarWidth + 32) { // Enough space to center between sidebar and chart
+                                 desiredLeft = sidebarRight + (availableSpace / 2) - (toolbarWidth / 2);
+                             } else { // Not enough space, position just right of sidebar
+                                 desiredLeft = sidebarRight + 16; // 1rem padding
                              }
+                             floatingToolbar.style.left = `${desiredLeft}px`;
+                             // console.log(">>> Toolbar positioned at left:", desiredLeft); // Can be noisy
+
                          } catch (e) {
                              console.error("Error positioning toolbar:", e);
-                             floatingToolbar.style.left = '19rem';
+                             floatingToolbar.style.left = '19rem'; // Fallback position
                          }
                      }
 
                      function checkScrollPosition() {
-                        const scrollContainer = document.getElementById('page-content');
-                        const vizTitleElement = visualizationsSection.querySelector('h3');
-                        const floatingToolbar = document.getElementById('floating-viz-toolbar');
-                         const lastChartCard = document.querySelector('#expansion-matrix-chart').closest('.chart-card');
+                         // console.log(">>> checkScrollPosition executing"); // Can be very noisy
+                        // Use the scrollContainer found earlier
+                        const vizTitleElement = visualizationsSection.querySelector('h3'); 
+                        // Ensure a reliable element exists for the bottom boundary check
+                         const lastKnownGoodElement = document.getElementById('primary-usage-container'); // Or another element guaranteed to be below the toolbar trigger point
 
-                        if (!scrollContainer || !vizTitleElement || !floatingToolbar || !lastChartCard) {
+                        if (!scrollContainer || !vizTitleElement || !floatingToolbar || !lastKnownGoodElement) {
+                             console.warn(">>> Toolbar scroll check skipped: elements missing.", 
+                                          {scrollContainer, vizTitleElement, floatingToolbar, lastKnownGoodElement});
                              return;
                         }
 
-                        const titleRect = vizTitleElement.getBoundingClientRect();
-                        const containerRect = scrollContainer.getBoundingClientRect();
-                        const toolbarHeight = floatingToolbar.offsetHeight;
-                        const marginBottom = 20;
-                        const lastChartRect = lastChartCard.getBoundingClientRect();
-                        const toolbarRect = floatingToolbar.getBoundingClientRect();
+                        try {
+                            const titleRect = vizTitleElement.getBoundingClientRect();
+                            const containerRect = scrollContainer.getBoundingClientRect(); // Use container viewport
+                           // const toolbarHeight = floatingToolbar.offsetHeight; // Not needed for logic
+                           // const marginBottom = 20; // Not directly used
+                            const lastElementRect = lastKnownGoodElement.getBoundingClientRect();
+                            const toolbarRect = floatingToolbar.getBoundingClientRect(); // Get current position
 
-                         const viewportMiddle = containerRect.top + (containerRect.height / 2);
-                         const showCondition1 = titleRect.top < viewportMiddle;
-                         const showCondition2 = lastChartRect.bottom > toolbarRect.top + 50 ;
+                            // Show when the Viz H3 top is above the middle of the viewport
+                            const viewportMiddle = containerRect.top + (containerRect.height / 2); 
+                            const showCondition1 = titleRect.top < viewportMiddle; 
+                            
+                            // Hide when the bottom of the last relevant element is above the top of the toolbar area
+                            // Use toolbarRect.top which includes its current transform state
+                            const showCondition2 = lastElementRect.bottom > toolbarRect.top + 50; // Keep some buffer
 
-                         if (showCondition1 && showCondition2) {
-                             floatingToolbar.classList.add('visible');
-                         } else {
-                             floatingToolbar.classList.remove('visible');
-                         }
+                            if (showCondition1 && showCondition2) {
+                                if (!floatingToolbar.classList.contains('visible')) {
+                                    // console.log(">>> Toolbar becoming visible"); // Log state changes
+                                    floatingToolbar.classList.add('visible');
+                                }
+                            } else {
+                                 if (floatingToolbar.classList.contains('visible')) {
+                                    // console.log(">>> Toolbar becoming hidden"); // Log state changes
+                                    floatingToolbar.classList.remove('visible');
+                                }
+                            }
+                        } catch(e) {
+                            console.error("Error in checkScrollPosition:", e);
+                        }
                      }
 
-                     const currentScrollContainer = document.getElementById('page-content');
-                     if (currentScrollContainer) {
-                         currentScrollContainer.addEventListener('scroll', checkScrollPosition);
+                     // Initial setup and event listeners
+                     if (scrollContainer) {
+                         scrollContainer.addEventListener('scroll', checkScrollPosition);
+                         // Delay initial position/check slightly to allow layout stabilization
                          setTimeout(() => {
-                             positionToolbar();
-                             checkScrollPosition();
-                         }, 100);
+                             console.log(">>> Running initial toolbar position and check");
+                             positionToolbar(); 
+                             checkScrollPosition(); 
+                         }, 300); // Slightly longer delay
                      }
-                     window.addEventListener('resize', positionToolbar);
-                 }
-                 setTimeout(setupFloatingToolbar, 500);
-         });
-        </script>
+                     window.addEventListener('resize', positionToolbar); // Reposition on resize
+                 } // End setupFloatingToolbar definition
+                 
+                 // Delay setupFloatingToolbar slightly more to ensure elements are ready
+                 setTimeout(setupFloatingToolbar, 500); 
+              // --- End Floating Toolbar ---
 
+              console.log('>>> Load event listener finished. <<<'); 
+
+         }); // End of load event listener
+        // --- End of Script Block ---
+        </script>
     </body>
 </html>
 '''
