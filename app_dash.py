@@ -937,7 +937,7 @@ app.layout = html.Div([
             dbc.NavLink(html.Span(["Methodology & Design", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#methodology-design", id="nav-methodology-design", active="exact", className="nav-link parent-nav-link", n_clicks=0),
             dbc.Collapse(html.Div([ dbc.NavLink("Two-Phase Gabor-Granger", href="#gabor-granger", id="nav-gabor-granger", active="exact", className="nav-link nested-link"), dbc.NavLink("Assuming Uplift in WTP", href="#wtp", id="nav-wtp", active="exact", className="nav-link nested-link"), dbc.NavLink("Van Westendorp", href="#van-westendorp", id="nav-van-westendorp", active="exact", className="nav-link nested-link"), dbc.NavLink("Control Group", href="#control-group", id="nav-control-group", active="exact", className="nav-link nested-link"), dbc.NavLink("Competitive Adjustment", href="#competitive-adjustment", id="nav-competitive-adjustment", active="exact", className="nav-link nested-link"), dbc.NavLink("Population Sampling", href="#population-sampling", id="nav-population-sampling", active="exact", className="nav-link nested-link"), dbc.NavLink("Distance-Weighted Awareness Proxy", href="#awareness-proxy", id="nav-awareness-proxy", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-methodology", is_open=False),
             dbc.NavLink(html.Span(["My Role: Guiding AI", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#my-role", id="nav-my-role", active="exact", className="nav-link parent-nav-link", n_clicks=0),
-            dbc.Collapse(html.Div([ dbc.NavLink("Rejecting Inappropriate Methodology", href="#rejecting-methodology", id="nav-rejecting-methodology", active="exact", className="nav-link nested-link"), dbc.NavLink("Identifying Critical Measurement Ambiguity", href="#identifying-ambiguity", id="nav-identifying-ambiguity", active="exact", className="nav-link nested-link"), dbc.NavLink("Refining Awareness Proxy Methods", href="#refining-proxy", id="nav-refining-proxy", active="exact", className="nav-link nested-link"), dbc.NavLink("Pushing for Deeper Analysis", href="#pushing-for-deeper-analysis", id="nav-push-for-deeper-analysis", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-my-role", is_open=False),
+            dbc.Collapse(html.Div([ dbc.NavLink("Rejecting Inappropriate Methodology", href="#rejecting-methodology", id="nav-rejecting-methodology", active="exact", className="nav-link nested-link"), dbc.NavLink("Identifying Critical Measurement Ambiguity", href="#identifying-ambiguity", id="nav-identifying-ambiguity", active="exact", className="nav-link nested-link"), dbc.NavLink("Refining Awareness Proxy Methods", href="#refining-proxy", id="nav-refining-proxy", active="exact", className="nav-link nested-link"), dbc.NavLink("Pushing for Deeper Portfolio Analysis", href="#pushing-for-deeper-portfolio-analysis", id="nav-pushing-for-deeper-portfolio-analysis", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-my-role", is_open=False),
             dbc.NavLink("Survey Flow", href="#survey-flow", id="nav-survey-flow", active="exact", className="nav-link"),
             # Updated Interactive Visualizations Link
             dbc.NavLink(html.Span(["Interactive Visualizations", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#visualizations", id="nav-visualizations", active="exact", className="nav-link parent-nav-link", n_clicks=0),
@@ -1272,14 +1272,15 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
 
 # --- New addition - start here ---
         html.Div([
-            html.H3("Pushing for Deeper Analysis", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'}),
+            html.H3("Pushing for Deeper Portfolio Analysis", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'}),
             dcc.Markdown('''
                 As part of analyzing the business impact of Kizik's pricing strategy, I noticed some interesting trends among the amount and type of models offered at certain pricing tiers, and instructed Gemini to uncover them.
             ''', className="text-content", style={'margin-top': '0', 'margin-bottom': '1rem'}),
+            
             html.Div([
                 html.Img(
                     src=app.get_asset_url('guiding gemini.png'),
-                    alt="Pushing for deeper product analysis",
+                    alt="Pushing for deeper portfolio analysis",
                     style={'display': 'block', 'margin': 'auto', 'max-width': '100%', 'height': 'auto', 'border-radius': '8px'}
                 )
             ], className="chart-card", style={'padding': '1rem', 'width': '49%', 'margin': '1rem auto'}),
@@ -1301,7 +1302,7 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
             It's likely that there's current demand for this, as many brands use this same paring-down strategy of higher-priced models to address needs of segments with lower WTP. 
             ''', className="text-content", style={'margin-top': '0'}),
 
-        ], id="push-for-deeper-analysis", className="text-container"),
+        ], id="pushing-for-deeper-portfolio-analysis", className="text-container"),
 
         # --- End My Role Sections ---
 
@@ -1554,7 +1555,15 @@ This chart tells you **which factors significantly push the "Expensive" price po
             # --- End Text Block ---
 
         ], id="visualizations", style={'width': '100%'}),
+
         # --- NEW: Interactive Segment Information Display ---
+        html.Div([
+            html.H3("Segment Profiles", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
+            dcc.Markdown("""
+            TEST PLACEHOLDORRRR FIX spacing
+            """, className="text-content")
+        ], id="segment-profiles", className="text-container", style={'margin-bottom': '1rem'}),
+
         html.Div([
              # NEW: Title Display Area (populated by callback)
             html.H4(
