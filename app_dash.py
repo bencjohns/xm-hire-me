@@ -73,61 +73,89 @@ SEGMENT_INFO = {
     "Curious Skeptics": {
         "number": 4,
         "title": "Curious Skeptics",
-        "definition": "Characterized by a lower simulated mean value assigned to the hands-free feature (3.2/5) and lower stated priority for HandsFree Convenience (3/5). Their importance ratings are moderate across Comfort (4/5), Style (4/5), Durability (4/5), and Price (4/5), with moderate importance assigned to Brand (4/5). (Note: The simulation defined a wtp_adjust factor of 0.90 for this segment, but it was not directly used in the WTP calculation).",
+        "priorities": [
+            "Lower value for hands-free (3.2/5), lower priority for convenience (3/5).",
+            "Moderate importance: Comfort, Style, Durability, Price, Brand (all 4/5)."
+        ],
+        "basic_description": "Curious Skeptics are open to new products but are cautious. Convenience isn't their top driver; they seek balanced comfort, style, durability, and price, with moderate brand influence. They need convincing of a product's value beyond hype.",
+        "segment_example_profile": "Priya, a practical high school science teacher, needs comfortable shoes for all-day classroom wear. While aware of hands-free tech, she questions its real utility for her, prioritizing sensible style and durability. She'd consider Kiziks if clearly beneficial and reasonably priced, after extensive research and review comparisons.",
         "data_signature": {
             "WTP/VW Charts": "Exhibit lower-mid-range price thresholds.",
             "GG Chart": "Shows smaller WTP uplift post-explanation.",
-            "Top 3 Drivers Chart": "HandsFree Convenience is mentioned less frequently; Style, Brand, Comfort, Price are more prominent.",
-            "Regression Plot": "Factors uniquely associated with this segment show weaker relationships with WTP. Exhibits lower average ValuePerceptionPost.",
-            "Primary Usage Chart": "Usage patterns are less distinct than other segments."
+            "Top 3 Drivers": "Style, Brand, Comfort, Price are prominent; HandsFree less so.",
+            "Regression Plot": "Weaker WTP relationships; lower average ValuePerceptionPost.",
+            "Primary Usage": "Usage patterns are less distinct than other segments."
         }
     },
     "Value Seekers": {
         "number": 2,
         "title": "Value Seekers",
-        "definition": "Characterized by the highest simulated importance rating assigned to Price (5/5), alongside high importance for Durability (5/5) and Comfort (5/5). They assign lower importance to Style (3/5), HandsFree Convenience (3/5), and Brand (2/5). Their simulated mean value for the hands-free feature is moderate (3.8/5). (Note: The simulation defined a wtp_adjust factor of 0.85 for this segment, but it was not directly used in the WTP calculation).",
+        "priorities": [
+            "Highest priority for Price (5/5), high priority for Durability, Comfort (both 5/5).",
+            "Lower importance: Style (3/5), HandsFree Convenience (3/5), Brand (2/5).",
+            "Moderate simulated value for hands-free (3.8/5)."
+        ],
+        "basic_description": "Value Seekers prioritize functionality and longevity at the best possible price. While they appreciate comfort, they are less swayed by trends or brand prestige. Hands-free convenience is a secondary concern unless it offers clear, practical benefits without a significant price increase.",
+        "segment_example_profile": "Mark, a retired handyman, seeks durable, comfortable, and affordable shoes for everyday tasks and light outdoor work. He's skeptical of \"fancy\" features but might be swayed by hands-free if the price is right and it genuinely makes life easier.",
         "data_signature": {
             "WTP/VW Charts": "Exhibit the lowest price thresholds.",
             "GG Chart": "Shows a smaller percentage increase in WTP post-explanation.",
-            "Top 3 Drivers Chart": "Price, Durability, and Comfort are the most frequently mentioned drivers.",
-            "Regression Plot": "Associated with significant negative coefficients for lower IncomeBracket dummies.",
-            "Primary Usage Chart": "Usage shows a concentration in Everyday casual wear and potentially Work/Office."
+            "Top 3 Drivers": "Price, Durability, and Comfort are most frequent.",
+            "Regression Plot": "Associated with negative coefficients for lower IncomeBrackets.",
+            "Primary Usage": "Concentrated in Everyday casual wear and Work/Office."
         }
     },
     "Interested Pragmatists": {
         "number": 3,
         "title": "Interested Pragmatists",
-        "definition": "Characterized by balanced high priorities (Comfort 5/5, Style 4/5, Durability 4/5, Price 4/5, HandsFree Convenience 4/5) and a high simulated mean value assigned to the hands-free feature (4.0/5). They exhibit a high simulated mean likelihood for repeat purchases (4.0/5). (Note: The simulation defined a wtp_adjust factor of 1.00 for this segment, but it was not directly used in the WTP calculation).",
+        "priorities": [
+            "Balanced high priorities: Comfort (5/5), HandsFree Convenience (4/5).",
+            "Style, Durability, Price (all 4/5). Hands-free appeal and high simulated likelihood for repeat purchases (4.0/5).",
+        ],
+        "basic_description": "Interested Pragmatists are practical consumers who see the appeal of innovative features like hands-free technology, especially if it enhances comfort and daily convenience. They balance this interest with considerations of style, durability, and fair pricing. They are likely to adopt new tech if its benefits are clear and well-integrated.",
+        "segment_example_profile": "Alejandra, a busy working mom and graphic designer, values shoes that simplify her hectic routine without sacrificing style or comfort. She's intrigued by hands-free tech for its convenience, especially when juggling kids and work, and is willing to pay a reasonable premium for it.",
         "data_signature": {
             "WTP/VW Charts": "Exhibit mid-range price thresholds.",
             "GG Chart": "Shows a significant positive WTP uplift post-explanation.",
-            "Top 3 Drivers Chart": "Displays a balanced mix of frequently mentioned drivers.",
-            "Regression Plot": "Associated with positive ValuePerceptionPost coefficients; may form the baseline for categorical comparisons.",
-            "Primary Usage Chart": "Shows a diverse usage profile across multiple scenarios."
+            "Top 3 Drivers": "Displays a balanced mix of frequently mentioned drivers.",
+            "Regression Plot": "Associated with positive ValuePerceptionPost; may be baseline.",
+            "Primary Usage": "Shows a diverse usage profile across multiple scenarios."
         }
     },
     "Premium Enthusiasts": {
         "number": 1,
         "title": "Premium Enthusiasts",
-        "definition": "Characterized by the highest simulated mean value assigned to the hands-free feature (4.5/5) and stated priorities emphasizing HandsFree Convenience (5/5), Style (5/5), and Comfort (5/5), while placing the lowest importance on Price (3/5). They have the highest simulated mean likelihood for repeat purchases (4.5/5). (Note: The simulation defined a wtp_adjust factor of 1.20 for this segment, but it was not directly used in the WTP calculation in the final script).",
+        "priorities": [
+            "Highest value for hands-free (4.5/5), highest priority for convenience (5/5).",
+            "Emphasize: Style (5/5), Comfort (5/5). Lowest importance for Price (3/5).",
+            "Highest simulated likelihood for repeat purchases (4.5/5)."
+        ],
+        "basic_description": "Premium Enthusiasts are early adopters who value innovation, style, and superior comfort. They are willing to pay more for products that offer unique benefits and a premium experience, such as Kizik's hands-free technology. Price is a secondary concern to quality and cutting-edge features.",
+        "segment_example_profile": "Naomi, a tech executive who travels frequently, seeks stylish, comfortable, and innovative footwear. She highly values the convenience of hands-free shoes for airport security and a fast-paced lifestyle, and is willing to invest in premium brands that offer such features.",
         "data_signature": {
             "WTP/VW Charts": "Exhibit the highest price thresholds.",
             "GG Chart": "Shows the largest percentage increase in WTP post-explanation.",
-            "Top 3 Drivers Chart": "HandsFree Convenience, Style, and Brand/Comfort are the most frequently mentioned drivers. Price is mentioned less frequently.",
-            "Regression Plot": "Associated with high ValuePerceptionPost and potentially shows correlation with positive coefficients for higher IncomeBrackets.",
-            "Primary Usage Chart": "Usage profile shows higher proportions for Style/Fashion statement and Travel compared to other segments."
+            "Top 3 Drivers": "HandsFree Convenience, Style, Brand/Comfort prominent; Price less so.",
+            "Regression Plot": "Correlates with high ValuePerceptionPost and higher IncomeBrackets.",
+            "Primary Usage": "Higher proportions for Style/Fashion statement and Travel."
         }
     },
     "Traditionalists": {
         "number": 5,
         "title": "Traditionalists",
-        "definition": "Characterized by the lowest simulated mean value assigned to the hands-free feature (2.5/5), very low stated priority for HandsFree Convenience (1/5), and high priority for core attributes like Comfort (5/5), Durability (5/5), and Price (5/5). They have the lowest simulated mean likelihood for repeat purchases (2.0/5) and were potentially simulated to be older. (Note: The simulation defined a wtp_adjust factor of 0.75 for this segment, but it was not directly used in the WTP calculation).",
+        "priorities": [
+            "Lowest value for hands-free (2.5/5), very low priority for convenience (1/5).",
+            "High priority: Comfort (5/5), Durability (5/5), Price (5/5).",
+            "Lowest simulated likelihood for repeat purchases (2.0/5).",
+        ],
+        "basic_description": "Traditionalists prefer proven, familiar footwear attributes like comfort, durability, and value for money. They are often skeptical of new technologies like hands-free features, viewing them as unnecessary or faddish. Their purchasing decisions are driven by practicality and established habits.",
+        "segment_example_profile": "Martin, a retired librarian, prefers classic, comfortable shoes from brands he trusts. He values durability and a fair price above all else and sees little need for hands-free technology, finding traditional slip-ons or lace-ups perfectly adequate.",
         "data_signature": {
             "WTP/VW Charts": "Exhibit the lowest or second-lowest price thresholds.",
             "GG Chart": "Shows minimal or no WTP uplift post-explanation.",
-            "Top 3 Drivers Chart": "Comfort, Durability, Price are the most frequent drivers. HandsFree Convenience is mentioned rarely or not at all.",
-            "Regression Plot": "Associated with significant negative coefficients for older AgeGroup dummies. Exhibits the lowest average ValuePerceptionPost.",
-            "Primary Usage Chart": "Shows a higher proportion for Specific activity needing convenience alongside Everyday casual wear."
+            "Top 3 Drivers": "Comfort, Durability, Price most frequent; HandsFree rarely mentioned.",
+            "Regression Plot": "Associated with negative coefficients for older AgeGroup; lowest ValuePerceptionPost.",
+            "Primary Usage": "Higher for Specific activity along with Everyday casual."
         }
     }
 }
@@ -171,21 +199,40 @@ def create_segment_content(segment_name):
         return html.P("Segment details not found.")
 
     info = SEGMENT_INFO[segment_name]
-    data_sig = info.get("data_signature", {})
+    priorities_list = info.get("priorities", [])
+    basic_desc = info.get("basic_description", "N/A")
+    example_profile_desc = info.get("segment_example_profile", "N/A")
+    data_sig_dict = info.get("data_signature", {})
 
-    # Return ONLY the content part, title will be handled separately
-    return html.Div([
-        # html.H4(info.get("title", segment_name), className="segment-info-title", style={'font-weight': 'bold', 'margin-bottom': '1rem'}), # Title removed from here
-        html.P([html.Strong("Definition: "), info.get("definition", "N/A")], style={'margin-bottom': '1rem'}),
-        html.P(html.Strong("Data Signature:"), style={'margin-bottom': '0.5rem'}),
-        html.Ul([
-            html.Li([html.Strong("WTP/VW Charts: "), data_sig.get("WTP/VW Charts", "N/A")]),
-            html.Li([html.Strong("GG Chart: "), data_sig.get("GG Chart", "N/A")]),
-            html.Li([html.Strong("Top 3 Drivers Chart: "), data_sig.get("Top 3 Drivers Chart", "N/A")]),
-            html.Li([html.Strong("Regression Plot: "), data_sig.get("Regression Plot", "N/A")]),
-            html.Li([html.Strong("Primary Usage Chart: "), data_sig.get("Primary Usage Chart", "N/A")]),
-        ], style={'padding-left': '20px', 'margin-bottom': '0'}) # Use UL for bullets
-    ])
+    content_children = []
+
+    # Priorities
+    content_children.append(html.P(html.Strong("Priorities:"), style={'margin-bottom': '0.5rem', 'margin-top': '0'}))
+    if priorities_list:
+        content_children.append(
+            html.Ul([html.Li(item) for item in priorities_list], style={'padding-left': '20px', 'margin-bottom': '1rem', 'font-size': '15px'})
+        )
+
+    # Description
+    content_children.append(html.P(html.Strong("Description:"), style={'margin-bottom': '0.5rem'}))
+    content_children.append(dcc.Markdown(basic_desc, className="text-content", style={'margin-top': '0', 'font-size': '15px'}))
+
+    # Segment Example Profile
+    content_children.append(html.P(html.Strong("Segment Example Profile:"), style={'margin-bottom': '0.5rem'}))
+    content_children.append(dcc.Markdown(example_profile_desc, className="text-content", style={'margin-top': '0', 'font-size': '15px'}))
+
+    # Data Signature
+    content_children.append(html.P(html.Strong("Data Signature:"), style={'margin-bottom': '0.5rem'}))
+    if data_sig_dict:
+        data_sig_items = []
+        # Use the specific key order
+        data_sig_key_order = ["WTP/VW Charts", "GG Chart", "Top 3 Drivers", "Regression Plot", "Primary Usage"]
+        for key in data_sig_key_order:
+            if key in data_sig_dict: # Check if key exists to prevent errors
+                data_sig_items.append(html.Li([html.Strong(f"{key}: "), data_sig_dict[key]]))
+        content_children.append(html.Ul(data_sig_items, style={'padding-left': '20px', 'margin-bottom': '1rem', 'font-size': '15px'}))    
+    return html.Div(content_children)
+
 
 # --- HELPER FUNCTION for Limitation Content ---
 def create_limitation_content(limitation_id, content_list):
@@ -1377,7 +1424,6 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
                     html.Div([
                         dbc.Label("Customer Segment", className="floating-label"),
                         html.Div(id='segment-options-container', className='options-container'),
-                        html.Hr(className="toolbar-separator"),
                         dbc.Label("WTP Price Point", className="floating-label"),
                         html.Div(
                             id='wtp-options-container',
@@ -1577,8 +1623,8 @@ This chart tells you **which factors significantly push the "Expensive" price po
         html.Div([
             html.H3("Segment Profiles", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
-            TEST PLACEHOLDORRRR FIX spacing
-            """, className="text-content")
+            These segments represent distinct consumer groups identified through simulated behavioral and attitudinal data. Understanding their unique priorities, characteristics, and how they manifest in the data can help tailor marketing strategies, product development, and customer engagement efforts for Kizik footwear. Each profile below offers a snapshot of their defining traits, a hypothetical persona, and key data signatures observed in this study.
+            """, className="text-content") # Updated placeholder
         ], id="segment-profiles", className="text-container", style={'margin-bottom': '1rem'}),
 
         html.Div([
@@ -1602,62 +1648,6 @@ This chart tells you **which factors significantly push the "Expensive" price po
             ])
         ], id="segment-info-container", className="segment-info-container"), # Use DIFFERENT class than chart-card
         # --- END: Interactive Segment Information Display ---
-
-        # Data Section (Explicit Div for Button)
-        html.Div([
-            html.H3("Data and Sources", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
-
-            # Wrap the button in its own Div
-            html.Div([
-                dbc.Button("Show Sample Data", id="collapse-button", className="mb-3", color="primary", n_clicks=0),
-            ]), # End of Div wrapping the button
-
-            dbc.Collapse(
-                dbc.Card(dbc.CardBody(html.Div(id='sample-data-table'))),
-                id="collapse",
-                is_open=False
-            ),
-        ], id="data", className="text-container"),
-
-        html.Div([ # Standard text container for the block
-                html.P([html.Strong("Overview of Data Sources", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
-                dcc.Markdown("""
-
-                    **Underlying Data Sources for Synthetic Data Parameters**
-
-                    It's important to remember that the data used in the creation of this model contains simulated data. However, the parameters used to *generate* this data were informed by publicly available sources to make the simulation realistic.
-
-                    **U.S. Census Bureau (Demographics & Regional Distribution)**
-                    * **Link:** https://www.census.gov/data.html (Data portal); Specific tables often accessed via American Community Survey (ACS) data explorers.
-                    * **Why Used:** To ensure the synthetic respondent pool realistically reflects the US population in terms of age, gender, income distribution, and geographic spread (regional population weights). Makes the sample nationally representative.
-                    * **Specific Data/Variables Used to Inform Parameters:**
-                    * Population estimates by Age Group (used for age_weights).
-                    * Population estimates by Gender (used for gender_sample weights).
-                    * Household Income distribution data (used for income_weights).
-                    * Population estimates by Region/State (used for region_pop_weights and ensuring state distribution roughly matched regional population sizes).
-
-                    **2. Bureau of Labor Statistics (BLS) Consumer Expenditure Survey (CEX)**
-                    * **Link:** https://www.bls.gov/cex/
-                    * **Why Used:** To ground assumptions about general footwear spending patterns and price points in reality. Provides benchmarks for how much consumers typically spend on apparel/footwear across different demographics.
-                    * **Specific Data/Variables Used to Inform Parameters:**
-                    * Average expenditure on Footwear by income bracket and age group (informed the simulation of RecentPurchasePrice and the general range for base_wtp_sample).
-                    * General price distributions for casual footwear categories (helped set plausible ranges for VW and Gabor-Granger price points).
-
-                    **3. Kizik Store Locator Data (Physical Distribution)**
-                    * **Link:** Kizik Store Locator
-                    * **Why Used:** Provided the ground truth for Kizik's actual physical retail presence (the 372 store locations). This was essential for calculating the store density and the modified distance-weighted brand awareness proxy logic (taking into account flagship store location vs retail, adjacency bonus, distance decay, etc)
-                    * **Specific Data/Variables Used:**
-                    * List of store locations (City, State) used to count stores per state (store_counts).
-                    * This data, combined with population data, was used to calculate stores_per_100k and ultimately the BrandAwarenessProxy_DistWt.
-                    * Informed the simulation of Q10_2_DistNearestStoreMiles.
-
-                    **Summary**
-
-                    The survey questions aim to comprehensively measure price sensitivity, understand its drivers, and assess the impact of feature education within a realistic market context. The synthetic data itself is artificial, but its characteristics (demographics, price ranges, awareness levels) were carefully parameterized based on real-world patterns observed in Census, BLS CEX, and Kizik's actual store distribution data to ensure the simulation yields plausible and defensible insights.
-                    * *Technical Summary by Gemini*
-                """, className="text-content", style={'margin-top': '0'}),
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
-
 
         # --- Key Findings Section MODIFIED ---
         html.Div([
@@ -1965,6 +1955,63 @@ This chart tells you **which factors significantly push the "Expensive" price po
             )
         ], id="limitations-info-container", className="limitations-info-container"), # Use new ID and class
         # --- END: Interactive Limitations Carousel ---
+
+                # Data Section (Explicit Div for Button)
+        html.Div([
+            html.H3("Data and Sources", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
+
+            # Wrap the button in its own Div
+            html.Div([
+                dbc.Button("Show Sample Data", id="collapse-button", className="mb-3", color="primary", n_clicks=0),
+            ]), # End of Div wrapping the button
+
+            dbc.Collapse(
+                dbc.Card(dbc.CardBody(html.Div(id='sample-data-table'))),
+                id="collapse",
+                is_open=False
+            ),
+        ], id="data", className="text-container"),
+
+        html.Div([ # Standard text container for the block
+                html.P([html.Strong("Overview of Data Sources", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                dcc.Markdown("""
+
+                    **Underlying Data Sources for Synthetic Data Parameters**
+
+                    It's important to remember that the data used in the creation of this model contains simulated data. However, the parameters used to *generate* this data were informed by publicly available sources to make the simulation realistic.
+
+                    **U.S. Census Bureau (Demographics & Regional Distribution)**
+                    * **Link:** https://www.census.gov/data.html (Data portal); Specific tables often accessed via American Community Survey (ACS) data explorers.
+                    * **Why Used:** To ensure the synthetic respondent pool realistically reflects the US population in terms of age, gender, income distribution, and geographic spread (regional population weights). Makes the sample nationally representative.
+                    * **Specific Data/Variables Used to Inform Parameters:**
+                    * Population estimates by Age Group (used for age_weights).
+                    * Population estimates by Gender (used for gender_sample weights).
+                    * Household Income distribution data (used for income_weights).
+                    * Population estimates by Region/State (used for region_pop_weights and ensuring state distribution roughly matched regional population sizes).
+
+                    **2. Bureau of Labor Statistics (BLS) Consumer Expenditure Survey (CEX)**
+                    * **Link:** https://www.bls.gov/cex/
+                    * **Why Used:** To ground assumptions about general footwear spending patterns and price points in reality. Provides benchmarks for how much consumers typically spend on apparel/footwear across different demographics.
+                    * **Specific Data/Variables Used to Inform Parameters:**
+                    * Average expenditure on Footwear by income bracket and age group (informed the simulation of RecentPurchasePrice and the general range for base_wtp_sample).
+                    * General price distributions for casual footwear categories (helped set plausible ranges for VW and Gabor-Granger price points).
+
+                    **3. Kizik Store Locator Data (Physical Distribution)**
+                    * **Link:** Kizik Store Locator
+                    * **Why Used:** Provided the ground truth for Kizik's actual physical retail presence (the 372 store locations). This was essential for calculating the store density and the modified distance-weighted brand awareness proxy logic (taking into account flagship store location vs retail, adjacency bonus, distance decay, etc)
+                    * **Specific Data/Variables Used:**
+                    * List of store locations (City, State) used to count stores per state (store_counts).
+                    * This data, combined with population data, was used to calculate stores_per_100k and ultimately the BrandAwarenessProxy_DistWt.
+                    * Informed the simulation of Q10_2_DistNearestStoreMiles.
+
+                    **Summary**
+
+                    The survey questions aim to comprehensively measure price sensitivity, understand its drivers, and assess the impact of feature education within a realistic market context. The synthetic data itself is artificial, but its characteristics (demographics, price ranges, awareness levels) were carefully parameterized based on real-world patterns observed in Census, BLS CEX, and Kizik's actual store distribution data to ensure the simulation yields plausible and defensible insights.
+                    * *Technical Summary by Gemini*
+                """, className="text-content", style={'margin-top': '0'}),
+            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
+
+
         html.Div([
             html.H3("Technology Stack", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'}),
             dcc.Markdown("""
