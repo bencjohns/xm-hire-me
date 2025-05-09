@@ -3024,21 +3024,19 @@ app.index_string = '''
 
                 function checkScrollPosition() {
                     const vizTitleElement = visualizationsSection.querySelector('h3');
-                    const lastKnownGoodElement = document.getElementById('primary-usage-container');
-
-                    if (!scrollContainer || !vizTitleElement || !floatingToolbar || !lastKnownGoodElement) {
+                    const hideBoundaryElement = document.getElementById('expansion-matrix-container');
+                    if (!scrollContainer || !vizTitleElement || !floatingToolbar || !hideBoundaryElement) {
                         // console.warn(">>> Toolbar scroll check skipped: elements missing."); // Can be noisy
                         return;
                     }
                     try {
                         const titleRect = vizTitleElement.getBoundingClientRect();
                         const containerRect = scrollContainer.getBoundingClientRect();
-                        const lastElementRect = lastKnownGoodElement.getBoundingClientRect();
+                        const hideBoundaryRect = hideBoundaryElement.getBoundingClientRect();
                         const toolbarRect = floatingToolbar.getBoundingClientRect();
                         const viewportMiddle = containerRect.top + (containerRect.height / 2);
                         const showCondition1 = titleRect.top < viewportMiddle;
-                        const showCondition2 = lastElementRect.bottom > toolbarRect.top + 50;
-
+                        const showCondition2 = toolbarRect.bottom < hideBoundaryRect.bottom;
                         if (showCondition1 && showCondition2) {
                             if (!floatingToolbar.classList.contains('visible')) {
                                 floatingToolbar.classList.add('visible');
