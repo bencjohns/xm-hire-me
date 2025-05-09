@@ -688,7 +688,7 @@ def create_vw_chart(segment_filter='All Segments', group_filter=None): # Removed
 
     # --- Add Autoscale Hint Annotation ---
     fig.add_annotation(
-        text="ℹ️ Both <b>Customer Segment</b> and <b>WTP Price Point</b> are selectable", # Use <b> for bold X
+        text="ℹ️ Only <b>Customer Segment</b> is selectable", # Use <b> for bold X
         align='center',
         showarrow=False,
         xref='paper',  # Position horizontally relative to the entire chart width
@@ -2110,7 +2110,7 @@ app.clientside_callback(
         // Function to determine the currently visible section
         function getCurrentSection() {
             // MODIFIED: Update section querySelector to include new VW chart containers AND LIMITATIONS ID
-            const sections = document.querySelectorAll('#overview, #goal, #objective, #observations, #approach, #methodology-design, #gabor-granger, #van-westendorp, #control-group, #competitive-adjustment, #population-sampling, #awareness-proxy, #survey-flow, #my-role, #rejecting-methodology, #identifying-ambiguity, #refining-proxy, #visualizations, #data, #key-findings, #business-impact, #limitations, #limitations-info-container, #tech-stack, #vw-chart-control-container, #vw-chart-test-container, #wtp-gg-chart-container, #regional-map-container, #regression-coef-container, #top-drivers-container, #primary-usage-container');
+            const sections = document.querySelectorAll('#overview, #goal, #objective, #observations, #approach, #methodology-design, #gabor-granger, #wtp, #van-westendorp, #control-group, #competitive-adjustment, #population-sampling, #awareness-proxy, #survey-flow, #my-role, #rejecting-methodology, #identifying-ambiguity, #refining-proxy, #pushing-for-deeper-portfolio-analysis, #visualizations, #segment-profiles, #key-findings, #business-impact, #limitations, #limitations-info-container, #data, #tech-stack, #vw-chart-control-container, #vw-chart-test-container, #wtp-gg-chart-container, #regional-map-container, #expansion-matrix-container, #regression-coef-container, #top-drivers-container, #primary-usage-container, #segment-info-container');
             let currentSectionId = null;
             let minDistance = Infinity;
             const activationThreshold = 150; // How close to top before activating
@@ -2123,16 +2123,23 @@ app.clientside_callback(
                 const targetElement = document.getElementById(potentialId);
                  if (targetElement) {
                      let isValidSection = false;
+                     // Check if the hashed ID is one of our main scroll target sections
+                     // This includes section containers AND specific elements like H3s if they are direct href targets
                      sections.forEach(sec => { if (sec.id === potentialId) isValidSection = true; });
+                     
+                     // Also consider if the hash directly matches an ID even if not in `sections` querySelector explicitly,
+                     // as long as it's a valid target on the page.
+                     if (!isValidSection && document.getElementById(potentialId)) {
+                        // If it's a valid element ID on the page, we can use it.
+                        // The scroll-based logic later will refine if another "section" is more prominent.
+                        isValidSection = true; 
+                     }
+
                      if (isValidSection) {
                          currentSectionId = potentialId;
-                         // If a specific chart is hashed, prioritize it
-                         if (potentialId.includes('-chart-container')) { // General check first
+                         // If a specific chart or interactive container is hashed, prioritize it
+                         if (potentialId.includes('-container')) { 
                               return currentSectionId;
-                         }
-                         // Also check for the new limitations container
-                         if (potentialId === 'limitations-info-container') {
-                             return currentSectionId;
                          }
                      }
                  }
@@ -2143,9 +2150,9 @@ app.clientside_callback(
                 if (scrollY < 50 && sections.length > 0) {
                     currentSectionId = sections[0].id; // Default to first section if at top
                 } else {
-                     // Prioritize chart containers if they are near the vertical center
+                     // Prioritize chart/interactive containers if they are near the vertical center
                      const viewportCenterY = containerRect.top + containerRect.height / 2;
-                     let centerMostChartId = null;
+                     let centerMostInteractiveId = null;
                      let minCenterDistance = Infinity;
 
                     sections.forEach(section => {
@@ -2155,7 +2162,7 @@ app.clientside_callback(
                         const sectionCenterY = rect.top + rect.height / 2;
                         const distanceToCenter = Math.abs(sectionCenterY - viewportCenterY);
 
-                        // Check if section top is within activation threshold OR if it's a chart near center
+                        // Check if section top is within activation threshold OR if it's an interactive element near center
                          if (topRelativeToContainer <= activationThreshold && rect.bottom > activationThreshold / 2) {
                               const distanceToTop = Math.abs(topRelativeToContainer);
                               if (distanceToTop < minDistance) {
@@ -2164,22 +2171,22 @@ app.clientside_callback(
                              }
                          }
 
-                         // Check for chart centering
-                         if (section.id.includes('-chart-container') || section.id === 'limitations-info-container') { // Catch all chart containers + limitations
-                            if(distanceToCenter < containerRect.height / 2) { // Check if chart is within viewport vertically
+                         // Check for interactive element centering (chart containers, segment info, limitations info)
+                         if (section.id.includes('-container')) { 
+                            if(distanceToCenter < containerRect.height / 2) { // Check if element is within viewport vertically
                                 if(distanceToCenter < minCenterDistance) {
                                     minCenterDistance = distanceToCenter;
-                                    centerMostChartId = section.id;
+                                    centerMostInteractiveId = section.id;
                                 }
                              }
                          }
                     });
 
-                    // Prefer the chart/carousel closest to the center if one was found
-                    if (centerMostChartId && minCenterDistance < 150) { // Add threshold for center proximity
-                        currentSectionId = centerMostChartId;
+                    // Prefer the interactive element closest to the center if one was found and is reasonably close
+                    if (centerMostInteractiveId && minCenterDistance < 150) { // Add threshold for center proximity
+                        currentSectionId = centerMostInteractiveId;
                     }
-                    // Fallback if scrolled down but no section met criteria
+                    // Fallback if scrolled down but no section met criteria by top position
                      if (!currentSectionId && scrollY > activationThreshold) {
                          for (let i = sections.length - 1; i >= 0; i--) {
                             if(sections[i]){ // Check element exists
@@ -2199,14 +2206,10 @@ app.clientside_callback(
             if (!currentSectionId && scrollContainer && scrollY > 100) {
                 const bottomOfPage = (scrollContainer.scrollTop + scrollContainer.clientHeight) >= scrollContainer.scrollHeight - 50;
                 if (bottomOfPage && sections.length > 0) {
-                    // Find the last *actual* section ID, not just a chart container if possible
-                    let lastSection = sections[sections.length - 1];
-                    for(let i = sections.length - 1; i >= 0; i--) {
-                        if (sections[i] && !sections[i].id.includes('-chart-container') && sections[i].id !== 'limitations-info-container') {
-                            lastSection = sections[i];
-                            break;
-                        }
-                    }
+                    let lastSection = sections[sections.length - 1]; // Default to last in querySelector
+                    // Try to find the last *main content* section, not just a sub-component like a chart container, if possible.
+                    // This depends on your definition of "main content section".
+                    // For now, the last element in `sections` list that's visible is good enough.
                     currentSectionId = lastSection ? lastSection.id : sections[sections.length - 1].id;
                 }
             }
@@ -2220,71 +2223,102 @@ app.clientside_callback(
         }
 
         const currentSectionId = getCurrentSection();
-         const idMap = {
-            'overview': 'nav-overview', 'goal': 'nav-goal', 'objective': 'nav-objective',
-            'observations': 'nav-observations', 'approach': 'nav-approach',
-            'methodology-design': 'nav-methodology-design', 'gabor-granger': 'nav-gabor-granger',
-            'van-westendorp': 'nav-van-westendorp', 'control-group': 'nav-control-group',
+         const idMap = { // UPDATED idMap
+            'overview': 'nav-overview',
+            'goal': 'nav-goal',
+            'objective': 'nav-objective',
+            'observations': 'nav-observations',
+            'approach': 'nav-approach',
+
+            'methodology-design': 'nav-methodology-design',
+            'gabor-granger': 'nav-gabor-granger',
+            'wtp': 'nav-wtp', // Added
+            'van-westendorp': 'nav-van-westendorp',
+            'control-group': 'nav-control-group',
             'competitive-adjustment': 'nav-competitive-adjustment',
-            'population-sampling': 'nav-population-sampling', 'awareness-proxy': 'nav-awareness-proxy',
-            'survey-flow':'nav-survey-flow', 'my-role': 'nav-my-role',
+            'population-sampling': 'nav-population-sampling',
+            'awareness-proxy': 'nav-awareness-proxy',
+
+            'my-role': 'nav-my-role',
             'rejecting-methodology': 'nav-rejecting-methodology',
             'identifying-ambiguity': 'nav-identifying-ambiguity',
             'refining-proxy': 'nav-refining-proxy',
-            'visualizations': 'nav-visualizations', // Parent Viz
-            // Map chart container IDs to nav link IDs
+            'pushing-for-deeper-portfolio-analysis': 'nav-pushing-for-deeper-portfolio-analysis',
+
+            'survey-flow':'nav-survey-flow',
+
+            'visualizations': 'nav-visualizations', 
             'vw-chart-control-container': 'nav-vw-chart',
-            'vw-chart-test-container': 'nav-vw-chart',
+            'vw-chart-test-container': 'nav-vw-chart', 
             'wtp-gg-chart-container': 'nav-wtp-gg-chart',
             'regional-map-container': 'nav-regional-map',
+            'expansion-matrix-container': null, // No nav link for this
             'regression-coef-container': 'nav-regression-coef',
             'top-drivers-container': 'nav-top-drivers',
             'primary-usage-container': 'nav-primary-usage',
+
+            'segment-profiles': 'nav-segment-profiles', // Main section title div
+            'segment-info-container': 'nav-segment-profiles', // Interactive container
+
+            'key-findings': 'nav-key-findings',
+            'business-impact': 'nav-business-impact',
+
+            'limitations': 'nav-limitations', // Main section title div
+            'limitations-info-container': 'nav-limitations',
+
             'data': 'nav-data',
-            'key-findings': 'nav-key-findings', 'business-impact': 'nav-business-impact',
-            'limitations': 'nav-limitations', 'limitations-info-container': 'nav-limitations', // Map new container to same link
             'tech-stack': 'nav-tech-stack'
         };
-         const navLinkOrder = [
+         const navLinkOrder = [ // Must match Python Output list exactly
             'nav-overview', 'nav-goal', 'nav-objective', 'nav-observations', 'nav-approach',
             'nav-methodology-design', 'nav-gabor-granger', 'nav-van-westendorp',
             'nav-control-group', 'nav-competitive-adjustment', 'nav-population-sampling',
             'nav-awareness-proxy', 'nav-survey-flow', 'nav-my-role',
             'nav-rejecting-methodology', 'nav-identifying-ambiguity',
-            'nav-refining-proxy',
+            'nav-refining-proxy', 'nav-pushing-for-deeper-portfolio-analysis',
             'nav-visualizations',
             'nav-vw-chart', 'nav-wtp-gg-chart', 'nav-regional-map', 'nav-regression-coef', 'nav-top-drivers', 'nav-primary-usage',
-            'nav-data',
-            'nav-key-findings', 'nav-business-impact', 'nav-limitations', 'nav-tech-stack',
+            'nav-segment-profiles', // Added to match Python Output
+            'nav-key-findings', 'nav-business-impact', 'nav-limitations', 'nav-data', 'nav-tech-stack'
         ];
 
-        const activeNavLinkId = idMap[currentSectionId] || null;
-        const activeStatuses = navLinkOrder.map(linkId => {
-            if (!activeNavLinkId) return false;
-            if (linkId === activeNavLinkId) return true;
-             if (linkId === 'nav-overview' && ['nav-goal', 'nav-objective', 'nav-observations', 'nav-approach'].includes(activeNavLinkId)) return true;
-             if (linkId === 'nav-methodology-design' && ['nav-gabor-granger', 'nav-van-westendorp', 'nav-control-group', 'nav-competitive-adjustment', 'nav-population-sampling', 'nav-awareness-proxy'].includes(activeNavLinkId)) return true;
-             if (linkId === 'nav-my-role' && ['nav-rejecting-methodology', 'nav-identifying-ambiguity', 'nav-refining-proxy'].includes(activeNavLinkId)) return true;
-             if (linkId === 'nav-visualizations' && ['nav-vw-chart', 'nav-wtp-gg-chart', 'nav-regional-map', 'nav-regression-coef', 'nav-top-drivers', 'nav-primary-usage'].includes(activeNavLinkId)) return true;
-            return false;
-        });
-        // console.log("Active Statuses:", activeStatuses);
-        return activeStatuses;
-    }
+           const activeNavLinkId = idMap[currentSectionId] || null;
+           const activeStatuses = navLinkOrder.map(linkId => {
+               if (!activeNavLinkId) return false; // No active section, so no link is active
+
+               // Rule 1: If this linkId is the one directly corresponding to the active section, it's active.
+               if (linkId === activeNavLinkId) return true;
+
+               // Rule 2: Parent highlighting logic
+               if (linkId === 'nav-overview' && ['nav-goal', 'nav-objective', 'nav-observations', 'nav-approach'].includes(activeNavLinkId)) return true;
+               if (linkId === 'nav-methodology-design' && ['nav-gabor-granger', 'nav-wtp', 'nav-van-westendorp', 'nav-control-group', 'nav-competitive-adjustment', 'nav-population-sampling', 'nav-awareness-proxy'].includes(activeNavLinkId)) return true;
+               if (linkId === 'nav-my-role' && ['nav-rejecting-methodology', 'nav-identifying-ambiguity', 'nav-refining-proxy', 'nav-pushing-for-deeper-portfolio-analysis'].includes(activeNavLinkId)) return true;
+               if (linkId === 'nav-visualizations' && ['nav-vw-chart', 'nav-wtp-gg-chart', 'nav-regional-map', 'nav-regression-coef', 'nav-top-drivers', 'nav-primary-usage'].includes(activeNavLinkId)) return true;
+               
+               // 'nav-segment-profiles', 'nav-key-findings', etc. are top-level and handled by Rule 1.
+               // No other parent-child rules needed if the nav structure is flat beyond these.
+
+               return false;
+           });
+           // console.log("Active Statuses:", activeStatuses);
+           return activeStatuses;
+        }
     """,
-    [
+    [ # UPDATED Python Output list to match JS navLinkOrder (31 items)
         Output("nav-overview", "active"), Output("nav-goal", "active"), Output("nav-objective", "active"),
         Output("nav-observations", "active"), Output("nav-approach", "active"),
         Output("nav-methodology-design", "active"), Output("nav-gabor-granger", "active"), Output("nav-van-westendorp", "active"),
         Output("nav-control-group", "active"), Output("nav-competitive-adjustment", "active"), Output("nav-population-sampling", "active"),
         Output("nav-awareness-proxy", "active"), Output("nav-survey-flow", "active"), Output("nav-my-role", "active"),
         Output("nav-rejecting-methodology", "active"), Output("nav-identifying-ambiguity", "active"), Output("nav-refining-proxy", "active"),
+        Output("nav-pushing-for-deeper-portfolio-analysis", "active"),
         Output("nav-visualizations", "active"),
         Output("nav-vw-chart", "active"), Output("nav-wtp-gg-chart", "active"), Output("nav-regional-map", "active"),
         Output("nav-regression-coef", "active"), Output("nav-top-drivers", "active"), Output("nav-primary-usage", "active"),
-        Output("nav-data", "active"),
+        Output("nav-segment-profiles", "active"), # Added
         Output("nav-key-findings", "active"), Output("nav-business-impact", "active"), Output("nav-limitations", "active"),
-        Output("nav-tech-stack", "active"),
+        Output("nav-data", "active"), # Order matches JS
+        Output("nav-tech-stack", "active"), # Order matches JS
     ],
     Input("url", "pathname"),
     Input("url", "hash"),
