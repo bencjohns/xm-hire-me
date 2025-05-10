@@ -383,21 +383,6 @@ def create_wtp_gg_chart(segment_filter='All Segments'): # Removed df argument
     fig.add_trace(go.Scatter(x=wtp_initial_df['Price'], y=wtp_initial_df['Willing (%)'], mode='lines+markers', name='Pre-Explanation', line=dict(color=XM_COLORS['x2'], width=3, dash='dash'), marker=dict(symbol='circle', size=8)))
     fig.add_trace(go.Scatter(x=wtp_post_df['Price'], y=wtp_post_df['Willing (%)'], mode='lines+markers', name='Post-Explanation', line=dict(color=XM_COLORS['x5'], width=3), marker=dict(symbol='circle', size=8)))
 
-    # --- Add Autoscale Hint Annotation ---
-    fig.add_annotation(
-        text="ℹ️ Only <b>Customer Segment</b> is selectable", # Use <b> for bold X
-        align='center',
-        showarrow=False,
-        xref='paper',  # Position horizontally relative to the entire chart width
-        yref='paper',  # Position vertically relative to the entire chart height
-        x=0.5,         # Center horizontally
-        y=-0.2,        # Position below the default x-axis area (adjust if needed based on bottom margin)
-        font=dict(size=14, color='#6c757d'), # Smaller, grey font
-        xanchor='center',
-        yanchor='top' # Anchor top of text at y=-0.2
-    )
-    # --- End Autoscale Hint Annotation ---
-
     fig.update_layout(
         title={'text': chart_title, 'y':0.95, 'x':0.5, 'xanchor': 'center', 'yanchor': 'top', 'font': {'size': 18}},
         xaxis_title="Price Point ($)", yaxis_title="Respondents Willing to Pay (%)",
@@ -461,20 +446,6 @@ def create_regional_map(segment_filter='All Segments', wtp_price_point=139): # R
         margin={"r":0,"t":40,"l":0,"b":0}
     )
 
-    # --- Add Autoscale Hint Annotation ---
-    fig.add_annotation(
-        text="ℹ️ Both <b>Customer Segment</b> and <b>WTP Price Point</b> are selectable", # Use <b> for bold X
-        align='center',
-        showarrow=False,
-        xref='paper',  # Position horizontally relative to the entire chart width
-        yref='paper',  # Position vertically relative to the entire chart height
-        x=0.5,         # Center horizontally
-        y=0.001,        # Position below the default x-axis area (adjust if needed based on bottom margin)
-        font=dict(size=14, color='#6c757d'), # Smaller, grey font
-        xanchor='center',
-        yanchor='bottom' # Anchor top of text at y=0.001
-    )
-    # --- End Autoscale Hint Annotation ---
     return fig
 
 # 3. Expansion Priority Matrix
@@ -550,21 +521,6 @@ def create_expansion_matrix(segment_filter='All Segments', wtp_price_point=139):
     fig.add_annotation(x=region_data['Willing (%)'].min(), y=region_data['AwarenessOpportunity'].min(), text="Lower Priority", align='left', valign='bottom', xanchor='left', yanchor='bottom', **anno_opts)
 
     fig.update_traces(textposition='top center', marker=dict(line=dict(width=1, color='DarkSlateGrey')))
-
-    # --- Add Autoscale Hint Annotation ---
-    fig.add_annotation(
-        text="ℹ️ Click the <b>X</b> in the settings bar above to autoscale for better fit<br>Both <b>Customer Segment</b> and <b>WTP Price Point</b> are selectable",
-        align='center',
-        showarrow=False,
-        xref='paper',  # Position horizontally relative to the entire chart width
-        yref='paper',  # Position vertically relative to the entire chart height
-        x=0.5,         # Center horizontally
-        y=-0.1,        # Position below the default x-axis area (adjust if needed based on bottom margin)
-        font=dict(size=14, color='#6c757d'), # Smaller, grey font
-        xanchor='center',
-        yanchor='top' # Anchor top of text at y=-0.1
-    )
-    # --- End Autoscale Hint Annotation ---
 
     fig.update_layout(
         title={'text': matrix_title, 'y':0.95, 'x':0.5, 'xanchor': 'center', 'yanchor': 'top', 'font': {'size': 18}},
@@ -732,22 +688,6 @@ def create_vw_chart(segment_filter='All Segments', group_filter=None): # Removed
                 bgcolor="rgba(255,255,255,0.7)", borderpad=2,
                 ax=0, ay=ay_offset
             )
-
-    # --- Add Autoscale Hint Annotation ---
-    fig.add_annotation(
-        text="ℹ️ Only <b>Customer Segment</b> is selectable", # Use <b> for bold X
-        align='center',
-        showarrow=False,
-        xref='paper',  # Position horizontally relative to the entire chart width
-        yref='paper',  # Position vertically relative to the entire chart height
-        x=0.5,         # Center horizontally
-        y=-0.2,        # Position below the default x-axis area (adjust if needed based on bottom margin)
-        font=dict(size=14, color='#6c757d'), # Smaller, grey font
-        xanchor='center',
-        yanchor='top' # Anchor top of text at y=-0.2
-    )
-    # --- End Autoscale Hint Annotation ---
-
 
     # --- Add shaded region between PMC and PME ---
     if pmc_val is not None and pme_val is not None:
@@ -1395,7 +1335,6 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
         # --- Visualizations Section (REORDERED) ---
         html.Div([ # This is the main Div with id="visualizations"
             
-            # START OF MODIFICATION: New wrapper Div for the title
             html.Div([ 
                 html.H3(
                     "Interactive Visualizations", 
@@ -1403,45 +1342,51 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
                     style={
                         'font-size': '1.5rem', 
                         'font-weight': '600', 
-                        'width': '100%', # H3 can take full width of its new parent
-                        'margin-bottom': '1.5rem' # Adjust this value for spacing to the toolbar below
+                        'width': '100%', 
+                        'margin-bottom': '1.5rem' 
                     }
                 )
-            ], style={ # Style for the new wrapper Div
-                'max-width': '900px',         # Match chart card max-width
-                'margin-left': 'auto',        # Center the wrapper Div
-                'margin-right': 'auto',       # Center the wrapper Div
-                'width': '100%',              # Wrapper Div takes available width up to max-width
-                'padding-left': '150px',      # Explicitly no padding if H3 should align perfectly to edge
-                'padding-right': '0px'        # Explicitly no padding
+            ], style={ 
+                'max-width': '900px',      
+                'margin-left': 'auto',   
+                'margin-right': 'auto',    
+                'width': '100%',           
+                'padding-left': '0px', # Adjusted to align with centered content
+                'padding-right': '0px'      
             }),
-            # END OF MODIFICATION
+            
+            # --- Van Westendorp Control Chart ---
+            html.Div(dcc.Graph(id='van-westendorp-chart-control', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='vw-chart-control-container'), 
+            # MODIFIED TOOLBAR STRUCTURE
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group ONLY
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label",),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'vw-control'}, className='toolbar-options-list',)
+                    ])
+                ])
+            ]),
+            
+            # --- Van Westendorp Test Chart ---
+            html.Div(dcc.Graph(id='van-westendorp-chart-test', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='vw-chart-test-container'),
+            # MODIFIED TOOLBAR STRUCTURE
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group ONLY
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label"),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'vw-test'}, className='toolbar-options-list')
+                    ])
+                ])
+            ]),
 
-            # --- Floating Toolbar (REVERTED to Original Text-Based Structure) ---
-            html.Div([
-                html.Div([
-                    html.Div("Visualization Controls", className="floating-toolbar-title"),
-                    html.Div([
-                        dbc.Label("Customer Segment", className="floating-label"),
-                        html.Div(id='segment-options-container', className='options-container'),
-                        dbc.Label("WTP Price Point", className="floating-label"),
-                        html.Div(
-                            id='wtp-options-container',
-                            className='options-container wtp-grid-container',
-                            # Children are populated by callback
-                        )
-                    ], className="floating-controls-content")
-                ], className="floating-toolbar-inner")
-            ], id="floating-viz-toolbar", className="floating-toolbar"),
-            # --- End Reverted Toolbar ---
-
-            # --- Chart Order Based on Storytelling ---
-            # MODIFIED: Replace single VW chart with two divs for Control and Test VW charts
-            html.Div( dcc.Graph(id='van-westendorp-chart-control', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '1rem'}, id='vw-chart-control-container' ),
-            html.Div( dcc.Graph(id='van-westendorp-chart-test', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '1rem'}, id='vw-chart-test-container' ),
-
-           # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+           # --- Overview and Analysis Text Block for VW Charts ---
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
 The Van Westendorp price sensitivity meter helps us understand how our overall price is perceived. It reveals how much our segments are generally willing to pay for these shoes and identifies the acceptable range of prices based on the data. The chart illustrates what percentage of respondents per segment are willing to pay relative to any given price.
@@ -1464,19 +1409,23 @@ The relationship between these prices and their answers forms two critical price
 
 The prices between PMC and PME form the **overall acceptable range of price points**. The **OPP (Optimal Price Point)** is the specific price where the percentage of respondents who find the price "too cheap" equals the percentage who find it "too expensive." This range is where the majority of respondents in a particular segment would consider purchasing the product.
                 """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
-            # --- End Added Text ---
+            ], className="text-container"), 
 
-            # --- End MODIFICATION ---
-
-            # 1. Baseline & Feature Impact (Continued)
-            html.Div([ # Modified this Div to contain Graph and Text
-                dcc.Graph(id='wtp-gg-chart', config=STANDARD_GRAPH_CONFIG),
-
-            ], className="chart-card", style={'margin-bottom': '1rem', 'margin-top': '3rem'}, id='wtp-gg-chart-container' ),
-
-            # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+            # --- WTP Gabor-Granger Chart ---
+            html.Div(dcc.Graph(id='wtp-gg-chart', config=STANDARD_GRAPH_CONFIG),
+                     className="chart-card", 
+                     id='wtp-gg-chart-container'),
+            # MODIFIED TOOLBAR STRUCTURE
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group ONLY
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label"),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'wtp-gg'}, className='toolbar-options-list')
+                    ])
+                ])
+            ]),
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     This shows the willingness to pay at certain price points, and illustrates the impact of the feature explanation, essentially helping answer one of the core questions in my hypothesis: “Are people willing to pay more *after* receiving an explanation of how the tech works?”
@@ -1485,15 +1434,31 @@ The prices between PMC and PME form the **overall acceptable range of price poin
                 dcc.Markdown("""
 Yes! While some segments are more flexible on price, the overall trend is that each segment saw a post-explanation lift in willingness to pay, suggesting that explaining the tech does matter for price.
                 """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
-            # --- End Added Text ---
+            ], className="text-container"),
 
 
-            # 2. Geographic & Strategic View
-            html.Div( dcc.Graph(id='regional-wtp-map', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '3rem', 'margin-top': '5rem'}, id='regional-map-container' ),
-
-            # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+            # --- Regional WTP Map ---
+            html.Div(dcc.Graph(id='regional-wtp-map', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='regional-map-container'),
+            # MODIFIED TOOLBAR STRUCTURE (WITH BOTH CONTROLS)
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label"),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'regional-map'}, className='toolbar-options-list')
+                    ]),
+                    # Divider
+                    html.Div(className="toolbar-divider"),
+                    # WTP Group
+                    html.Div(className="toolbar-control-group wtp-group", children=[
+                        dbc.Label("WTP Price Point", className="toolbar-label"),
+                        html.Div(id={'type': 'static-wtp-options', 'chart': 'regional-map'}, className='toolbar-options-grid')
+                    ])
+                ])
+            ]),
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     This chart shows per-state WTP based on the post-explanation probability data (simulated percentage likelihood of purchase) avergaed across all respondents (both Control and Test groups combined) who fall within the selected segment filter.
@@ -1502,13 +1467,31 @@ Yes! While some segments are more flexible on price, the overall trend is that e
                 dcc.Markdown("""
                     The 'West' region has an estimated VW_Expensive that is $20.87 higher than the baseline region, the Midwest. Being in the West, Northeast, or South region significantly predicts higher WTP compared to the baseline.
                 """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
+            ], className="text-container"),
 
 
-            html.Div( dcc.Graph(id='expansion-matrix-chart', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '3rem'}, id='expansion-matrix-container' ), # ID added even if not linked
-
-           # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+            # --- Expansion Priority Matrix ---
+            html.Div(dcc.Graph(id='expansion-matrix-chart', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='expansion-matrix-container'),
+            # MODIFIED TOOLBAR STRUCTURE (WITH BOTH CONTROLS)
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label"),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'expansion-matrix'}, className='toolbar-options-list')
+                    ]),
+                    # Divider
+                    html.Div(className="toolbar-divider"),
+                    # WTP Group
+                    html.Div(className="toolbar-control-group wtp-group", children=[
+                        dbc.Label("WTP Price Point", className="toolbar-label"),
+                        html.Div(id={'type': 'static-wtp-options', 'chart': 'expansion-matrix'}, className='toolbar-options-grid')
+                    ])
+                ])
+            ]),
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
 The Expansion Priority Matrix identifies key regions for market growth by plotting Market Attractiveness against Market Entry Opportunity. To make things more concrete, if you wanted to find a market for expansion that would respond well to Kizik products, you'd want to find something in the top right quadrant. There, you'll find the perfect blend of people willing to pay higher prices who also have less brand awareness, or more room to grow brand recognition.
@@ -1533,14 +1516,14 @@ Overall, the quadrants in this matrix can help a researcher understand which are
                 dcc.Markdown("""
                     At $139 and $159 (both common price points for Kizik's current offerings), the West and Northeast regions are the most attractive. The Northeast is fairly unique, in that it has both a higher brand awareness and a high willingness to pay, moreso than the West. It also has three flagship stores, while the West only has two. The West as well represents a great opportunity for continuous expansion, not to mention relatively reduced shipping times from their warehouse in Lindon.
                 """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
+            ], className="text-container"),
 
 
-            # 3. Statistical Explanation of WTP
-            html.Div( dcc.Graph(id='regression-coef-plot', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '3rem'}, id='regression-coef-container' ), # NEW CHART HERE
-
-            # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+            # --- Regression Coefficient Plot (No Controls) ---
+            html.Div(dcc.Graph(id='regression-coef-plot', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='regression-coef-container'),
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
 
@@ -1573,13 +1556,13 @@ Overall, the quadrants in this matrix can help a researcher understand which are
 This chart tells you **which factors significantly push the "Expensive" price point up or down** for the respondents in your (simulated) data. It helps identify the characteristics of people who are more or less price-sensitive, specifically regarding when they start thinking a price is getting high (but might still consider buying).
 * *Technical Summary by Gemini*
                 """, className="text-content", style={'margin-top': '0'}),
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
+            ], className="text-container"),
 
-            # 4. Segment Detail & Context
-            html.Div( dcc.Graph(id='top-drivers-chart', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '3rem'}, id='top-drivers-container' ),
-
-                        # --- Overview and Analysis Text Block (Moved OUTSIDE chart-card) ---
-            html.Div([ # Standard text container for the block
+            # --- Top 3 Drivers Chart (No Controls) ---
+            html.Div(dcc.Graph(id='top-drivers-chart', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='top-drivers-container'),
+            html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     This chart is the result of asking our "respondents'" to rate the importance of a variety of different shoe attributes, like comfort, price, style, hands-free convenience, etc. It's a bar chart representation of a cross-tabs (cross-tabulations) analyis. Cross-tab analysis shows the number or frequency of respondents that share the same value for a given attribute, like the percentage of "Curious Skeptics" who value Style.
@@ -1588,13 +1571,12 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
                     As you can see, Premium Enthusiasts greatly value Style and Kizik's tech, while Traditionalists are exactly as they sound with an overwhelming emphasis on Price, Durability, and Comfort, while averaging 4.5% across the other purchase drivers.
                 """, className="text-content", style={'margin-top': '0'}),
-            ], className="text-container", style={'margin-bottom': '3rem'}), # Standard bottom margin after text block
+            ], className="text-container"),
 
-
-            html.Div( dcc.Graph(id='primary-usage-chart', config=STANDARD_GRAPH_CONFIG), className="chart-card", style={'margin-bottom': '3rem'}, id='primary-usage-container' ),
-            # --- End Chart Order ---
-
-            # --- Primary Usage Explanation Text Block ---
+            # --- Primary Usage Chart (No Controls) ---
+            html.Div(dcc.Graph(id='primary-usage-chart', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     id='primary-usage-container'),
             html.Div([
                 html.P([
                     html.Strong("What it is: "),
@@ -1611,11 +1593,10 @@ This chart tells you **which factors significantly push the "Expensive" price po
                     " someone might value the shoe and its features. Someone buying for 'Everyday casual wear' might prioritize comfort and style differently than someone buying specifically for 'Mobility challenges'(example scenario under ‘Special activity needing convenience’) who might heavily prioritize the hands-free convenience. It helps the researcher understand the job-to-be-done, in addition to potentially informing marketing and product development."
                 ]),
             ],
-            # Apply consistent styling and add spacing
-            className="text-container", # Use existing class for centering/max-width
-            style={'margin-top': '-1.5rem', 'margin-bottom': '2rem'} # Adjust margins as needed (negative top margin pulls it closer to chart)
+            className="text-container", 
+            style={'margin-top': '0rem', 'margin-bottom': '2rem'} 
             ),
-            # --- End Text Block ---
+            # --- End Chart Order ---
 
         ], id="visualizations", style={'width': '100%'}),
 
@@ -1623,7 +1604,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
         html.Div([
             html.H3("Segment Profiles", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
-            These segments represent distinct consumer groups identified through simulated behavioral and attitudinal data. Understanding their unique priorities, characteristics, and how they manifest in the data can help tailor marketing strategies, product development, and customer engagement efforts for Kizik footwear. Each profile below offers a snapshot of their defining traits, a hypothetical persona, and key data signatures observed in this study.
+            These segments represent the simulated, pre-defined consumer groups present in the study - while the data is helpful, I've gone ahead and included what that data could represent in terms of a hypothetical persona for each segment. It's fun to imagine them as real people, with real lives, likes, and dislikes.
             """, className="text-content") # Updated placeholder
         ], id="segment-profiles", className="text-container", style={'margin-bottom': '1rem'}),
 
@@ -2024,8 +2005,8 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
     ], id="page-content",
     style=CONTENT_STYLE
-    ) # <-- FIXED: Added missing closing parenthesis for the page-content html.Div
-]) # <-- Closing bracket and parenthesis for the overall app.layout html.Div
+    ) 
+]) 
 print("App layout defined.")
 
 # Define the callback function
@@ -2042,22 +2023,20 @@ print("App layout defined.")
         Output("primary-usage-chart", "figure")
     ],
     [
-        # Input("dummy-store", "data"), # Removed dummy-store input
         Input("selected-values-store", "data")
     ]
 )
-def update_visualizations(selected_values): # Removed stored_data argument
+def update_visualizations(selected_values): 
     triggered_id = ctx.triggered_id
     print(f"Update visualizations triggered by: {triggered_id}")
 
     no_data_fig = go.Figure().update_layout(title_text="Data not available", xaxis={'visible': False}, yaxis={'visible': False}, plot_bgcolor='white', paper_bgcolor='white')
-    num_outputs = 8 # Ensure this matches the number of outputs
+    num_outputs = 8 
 
-    if app_data is None: # Check global app_data
+    if app_data is None: 
         print("Callback update_visualizations skipped: Global data not available.")
         return [no_data_fig] * num_outputs
 
-    # if stored_data is None or selected_values is None: # stored_data no longer used
     if selected_values is None:
         print("Update Viz: No selected values.")
         return [no_data_fig] * num_outputs
@@ -2068,27 +2047,22 @@ def update_visualizations(selected_values): # Removed stored_data argument
     try:
         selected_segment = selected_values.get('segment', 'All Segments')
         selected_price = selected_values.get('wtp', 139)
-        # df = pd.DataFrame(stored_data) # No longer needed, use global app_data
-        df = app_data # Use global app_data directly
+        df = app_data 
         if df.empty:
-            print("Update Viz: Global dataframe is empty.") # Changed message to reflect global data
+            print("Update Viz: Global dataframe is empty.") 
             return [no_data_fig] * num_outputs
 
-        # --- Generate ALL Charts ---
-        # Cross-Segment Charts (use full df from global app_data)
         print(f"Update Viz: Rendering cross-segment charts")
-        reg_fig = create_regression_coef_plot() # df argument removed
-        drivers_fig = create_top_drivers_chart() # df argument removed
-        usage_fig = create_primary_usage_chart() # df argument removed
+        reg_fig = create_regression_coef_plot() 
+        drivers_fig = create_top_drivers_chart() 
+        usage_fig = create_primary_usage_chart() 
 
-        # Segment-Filterable Charts
         print(f"Update Viz: Rendering filterable charts for Segment='{selected_segment}', Price=${selected_price}")
-        # Calls to create_vw_chart now use the latest revised version (inverted)
-        vw_fig_control = create_vw_chart(selected_segment, group_filter='Control') # df argument removed
-        vw_fig_test = create_vw_chart(selected_segment, group_filter='Test') # df argument removed
-        wtp_fig = create_wtp_gg_chart(selected_segment) # df argument removed
-        map_fig = create_regional_map(selected_segment, selected_price) # df argument removed
-        matrix_fig = create_expansion_matrix(selected_segment, selected_price) # df argument removed
+        vw_fig_control = create_vw_chart(selected_segment, group_filter='Control') 
+        vw_fig_test = create_vw_chart(selected_segment, group_filter='Test') 
+        wtp_fig = create_wtp_gg_chart(selected_segment) 
+        map_fig = create_regional_map(selected_segment, selected_price) 
+        matrix_fig = create_expansion_matrix(selected_segment, selected_price) 
 
     except Exception as e:
         print(f"Error during visualization update: {e}")
@@ -2096,7 +2070,6 @@ def update_visualizations(selected_values): # Removed stored_data argument
         traceback.print_exc()
         return [error_fig] * num_outputs
 
-    # Return figures in the specified order
     return vw_fig_control, vw_fig_test, wtp_fig, map_fig, matrix_fig, reg_fig, drivers_fig, usage_fig
 
 
@@ -2118,15 +2091,13 @@ def toggle_visualizations_collapse(n, is_open): return not is_open if n else is_
     Output("sample-data-table", "children"),
     Input("collapse-button", "n_clicks"),
     State("collapse", "is_open"),
-    # State("dummy-store", "data"), # Removed State for dummy-store
     prevent_initial_call=True
 )
-def toggle_collapse_and_show_data(n, is_open): # Removed stored_data argument
+def toggle_collapse_and_show_data(n, is_open): 
     if n:
-        table_content = "Global data could not be loaded." # Updated message
-        if app_data is not None: # Check global app_data
+        table_content = "Global data could not be loaded." 
+        if app_data is not None: 
             try:
-                # app_data is already a DataFrame
                 sample_df = app_data.head(10)
                 table_content = html.Div(dbc.Table.from_dataframe(sample_df, striped=True, bordered=True, hover=True, responsive=False, className='table-sm'), style={'overflowX': 'auto'})
             except Exception as e:
@@ -2386,8 +2357,7 @@ app.clientside_callback(
 )
 
 
-# --- Custom CSS (index_string - REVERTED Toolbar CSS) ---
-# CSS index_string remains the same as the previous version
+# --- Custom CSS (index_string - MODIFIED Toolbar CSS) ---
 app.index_string = '''
 <!DOCTYPE html>
 <html>
@@ -2457,35 +2427,7 @@ app.index_string = '''
                 border-right: none !important;
                 direction: ltr !important;
             }
-
-            /* --- Floating Toolbar EXACT Text-Based Styling (FROM ORIGINAL) --- */
-            .floating-toolbar {
-                position: fixed !important;
-                bottom: 10rem !important; /* Adjusted from 18rem to lower position */
-                /* left will be set by JS */
-                width: 14rem !important; /* Width from text image */
-                background-color: #F8F9FA !important; /* Light gray background */
-                border-radius: 6px !important; /* Rounded corners */
-                box-shadow: none !important; /* No shadow */
-                padding: 0 !important; /* No outer padding */
-                z-index: 1001 !important;
-                opacity: 0 !important;
-                transform: translateY(20px) !important;
-                transition: opacity 0.3s ease, transform 0.3s ease, left 0.3s ease !important;
-                pointer-events: none !important;
-                border: none !important; /* No border */
-                display: block !important;
-                overflow: hidden; /* Contain background */
-            }
-            .floating-toolbar.visible {
-                opacity: 1 !important;
-                transform: translateY(0) !important;
-                pointer-events: auto !important;
-            }
-            .floating-toolbar-inner {
-                /* No specific styles needed */
-            }
-
+            
             /* --- Segment Info Container Styles --- */
             .segment-info-container { /* Changed ID to class */
                 padding: 0 1rem 0 1rem !important; /* Reduce padding */
@@ -2537,133 +2479,144 @@ app.index_string = '''
                 justify-content: space-around !important;
                 flex-shrink: 0; /* Prevent tabs from shrinking */
             }
-            .floating-toolbar-title {
-                font-size: 0.9rem !important;
-                font-weight: 600 !important; /* Bold */
-                color: #212529 !important; /* Black text */
-                background-color: #E9ECEF !important; /* Darker gray background for title */
-                padding: 0.5rem 0.75rem !important;
+            
+            /* --- Other App Styles (Keep Essential) --- */
+            .text-container { max-width: 780px !important; width: 100% !important; margin-bottom: 2rem !important; margin-left: auto; margin-right: auto;}
+            .text-content { max-width: 780px !important; width: 100% !important; margin-top: 12px !important; margin-right: 0 !important; margin-left: 0 !important; white-space: normal !important; word-break: break-word !important; display: block !important; line-height: 1.65 !important; font-weight: 400 !important; color: #3E3E3E !important; font-size: 15px !important; }
+            .chart-card { background: white !important; border-radius: 12px !important; padding: 1.75rem 1.75rem 2.75rem 1.75rem !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important; width: 100% !important; max-width: 900px !important; border: 1px solid rgba(0, 0, 0, 0.03) !important; position: relative !important; /* margin-bottom: 0 !important; /* Removed default bottom margin */ margin-left: auto !important; margin-right: auto !important; } /* Centered BY DEFAULT */
+            #carousel-card { padding-bottom: 75px !important; margin-bottom: 0 !important; position: relative !important; max-width: 85% !important; margin-right: auto !important; margin-left: auto !important; width: 85% !important; padding: 1rem !important; } /* Centered */
+
+            /* --- Ensure Consistent Centering for Visualization Content --- */
+            #visualizations .chart-card {
+                margin-left: auto !important;
+                margin-right: auto !important;
+                margin-bottom: 0rem !important; /* Toolbar will provide space below */
+            }
+
+            /* Targets text containers that follow a chart card OR a static-chart-toolbar */
+            #visualizations .chart-card + .static-chart-toolbar + .text-container,
+            #visualizations .chart-card + .text-container { /* For charts with no toolbar */
+                margin-left: auto !important;
+                margin-right: auto !important;
+                margin-bottom: 2rem !important; /* Standard bottom margin for text blocks */
+                margin-top: 0rem !important; /* Text block should sit flush under toolbar or chart */
+            }
+            /* --- End Consistent Centering --- */
+
+            /* --- MODIFIED Styles for New Static Chart Toolbars --- */
+            .static-chart-toolbar {
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 0.75rem;
+                margin-top: 0rem;
+                margin-bottom: 1.5rem;
+                background-color: #F8F9FA;
+                border-left: 1px solid #dee2e6;
+                border-right: 1px solid #dee2e6;
+                border-bottom: 1px solid #dee2e6;
+                border-top: none;
+                border-radius: 0 0 6px 6px;
+                display: flex;
+                flex-direction: column; /* Stack title and controls-wrapper */
+                align-items: flex-start; /* Align title and wrapper to the left */
+            }
+
+            .toolbar-main-title {
+                font-size: 1rem !important;
+                font-weight: 600 !important;
+                color: #333 !important;
+                margin-bottom: 0.75rem !important;
                 text-align: center !important;
-                margin-bottom: 0 !important;
-                border-bottom: none !important; /* No border below title */
-                border-radius: 0 !important;
+                width: 100%; /* Take full width of the toolbar */
             }
-            .floating-controls-content {
-                padding: 0.75rem !important; /* Padding for the controls area */
+
+            .toolbar-controls-wrapper {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                align-items: flex-start; /* Align tops of segment/WTP groups */
             }
-            .floating-label {
-                font-size: 0.9rem !important; /* Original Label Size */
-                font-weight: 500 !important;
-                color: #212529 !important; /* Original Label Color */
+
+            .toolbar-control-group {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .toolbar-control-group.segment-group {
+                flex-grow: 1; /* Allow segment group to take more space if WTP is present */
+                 /* If only segment group is present, it will naturally take full width of its parent if parent is 100% */
+            }
+
+            .toolbar-control-group.wtp-group {
+                min-width: 220px; /* Adjust as needed for WTP options to look good */
+                flex-shrink: 0; /* Prevent WTP group from shrinking too much */
+            }
+
+            .toolbar-label {
+                font-size: 0.9rem !important;
+                font-weight: 600 !important; /* Bolder label */
+                color: #212529 !important;
                 margin-bottom: 0.5rem !important;
                 display: block;
             }
-            .options-container {
-                /* Base container */
+
+            .toolbar-options-list { /* Container for segment buttons */
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.25rem 0.5rem; /* Row and column gap between segment buttons */
+                padding-top: 0.25rem; /* Space below label */
             }
-            .segment-option,
-            .wtp-option {
+
+            .toolbar-options-grid { /* Container for WTP price points */
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); /* Slightly smaller min for WTP */
+                gap: 0.1rem 0.25rem;
+                line-height: 1.5;
+                padding-top: 0.25rem; /* Space below label */
+            }
+
+            .toolbar-segment-option,
+            .toolbar-wtp-option {
                 font-size: 0.85rem !important;
-                color: #6c757d !important; /* Gray text */
-                /* padding: 0.25rem 0 !important;  Original padding top/bottom 0 left/right */
-                padding-top: 0.25rem !important;    /* Keep original top padding */
-                padding-bottom: 0.25rem !important; /* Keep original bottom padding */
-                padding-left: 0.75rem !important;   /* ADDED: Adjust this value as needed */
-                padding-right: 0 !important;        /* Ensure no right padding if not intended */
-                margin-bottom: 0.1rem !important;
+                color: #6c757d !important;
+                padding: 0.25rem 0.5rem !important; /* Uniform padding */
+                margin-bottom: 0rem; /* Remove bottom margin, gap handles spacing */
                 cursor: pointer !important;
-                display: block; /* Segments on own line */
                 background-color: transparent !important;
                 border: none !important;
                 text-align: left;
                 transition: color 0.2s ease;
+                border-radius: 3px;
             }
-            .segment-option:hover,
-            .wtp-option:hover {
-                color: #212529 !important; /* Black text on hover */
-            }
-             /* Original Active State Colors */
-            .segment-option.active {
-                color: #212529 !important; /* Black text when active (Original) */
-                font-weight: 600 !important; /* Bolder */
-            }
-             .wtp-option.active {
-                 color: #212529 !important; /* Black text when active (Original) */
-                 font-weight: 600 !important; /* Slightly bolder when active (Original) */
-             }
-            .toolbar-separator {
-                border: none !important;
-                border-top: 1px solid #dee2e6 !important; /* Light gray separator */
-                margin: 0.75rem 0 !important;
-            }
-            /* WTP Grid Specific */
-            .wtp-grid-container {
-                line-height: 1.5;
-            }
-            /* Combine WTP base and grid styles */
-            .wtp-option {
-                display: inline-block !important;
-                width: 25% !important;
+
+            .toolbar-wtp-option {
                 text-align: center !important;
-                padding: 0.2rem 0 !important;
-                margin-bottom: 0 !important;
-            }
-             /* Ensure old conflicting styles are reset/removed */
-            .floating-dropdown,
-            #floating-viz-toolbar .segment-button,
-            #floating-viz-toolbar .wtp-button,
-            #floating-viz-toolbar .Select-control,
-            #floating-viz-toolbar .Select-menu-outer,
-            #floating-viz-toolbar .Select-menu {
-                background: none !important;
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: none !important; /* Hide explicitly */
-            }
-            /* --- End Original Toolbar CSS --- */
-
-
-/* --- Other App Styles (Keep Essential) --- */
-            .text-container { max-width: 780px !important; width: 100% !important; margin-bottom: 2rem !important; margin-left: auto; margin-right: auto;}
-            .text-content { max-width: 780px !important; width: 100% !important; margin-top: 12px !important; margin-right: 0 !important; margin-left: 0 !important; white-space: normal !important; word-break: break-word !important; display: block !important; line-height: 1.65 !important; font-weight: 400 !important; color: #3E3E3E !important; font-size: 15px !important; }
-            .chart-card { background: white !important; border-radius: 12px !important; padding: 1.75rem 1.75rem 2.75rem 1.75rem !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important; width: 100% !important; max-width: 900px !important; border: 1px solid rgba(0, 0, 0, 0.03) !important; position: relative !important; margin-bottom: 0 !important; margin-left: auto !important; margin-right: auto !important; } /* Centered BY DEFAULT */
-            #carousel-card { padding-bottom: 75px !important; margin-bottom: 0 !important; position: relative !important; max-width: 85% !important; margin-right: auto !important; margin-left: auto !important; width: 85% !important; padding: 1rem !important; } /* Centered */
-
-            /* --- Right-align MOST chart cards within visualizations --- */
-            #visualizations .chart-card {
-                margin-bottom: 3rem !important;
-                margin-right: 0 !important;   /* Align right */
-                margin-left: auto !important; /* Push right */
             }
 
-            /* --- RE-CENTER Specific chart cards within visualizations --- */
-            #visualizations #regression-coef-container,
-            #visualizations #top-drivers-container,
-            #visualizations #primary-usage-container {
-                margin-left: auto !important;  /* Center */
-                margin-right: auto !important; /* Center */
+            .toolbar-segment-option:hover,
+            .toolbar-wtp-option:hover {
+                color: #212529 !important;
             }
-            /* --- End Re-Center Specific Charts --- */
 
-
-            /* --- Align Specific Visualization Text Blocks Right --- */
-            #vw-chart-control-container + .text-container,
-            #vw-chart-test-container + .text-container,
-            #wtp-gg-chart-container + .text-container,
-            #regional-map-container + .text-container {
-                margin-left: 355px !important;  /* Push to the right */
-                margin-right: 59px !important;    /* Align right edge */
-                /* Keep max width from original .text-container rule if needed */
-                max-width: 780px !important;
+            .toolbar-segment-option.active,
+            .toolbar-wtp-option.active {
+                color: #212529 !important;
+                font-weight: 600 !important;
             }
-            /* --- End Align Specific Visualization Text Blocks Right --- */
+            
+            .toolbar-divider {
+                width: 1px;
+                background-color: #ccc; /* Or #dee2e6 */
+                margin: 0 1rem; /* Spacing around the divider */
+                align-self: stretch; /* Make it full height of the controls-wrapper */
+            }
+            /* --- End Modified Static Toolbar CSS --- */
+
 
             .chart-card h4 { color: #1A1A2E !important; font-weight: 600 !important; text-align: center !important; font-size: 1.1rem !important; margin-bottom: 1.25rem !important; }
             #visualizations { margin-bottom: 2rem !important; width: 100%; }
-
-            /* ... rest of your CSS ... */
 
             h3.mb-2 { color: #1A1A2E !important; font-size: 1.85rem !important; font-weight: 700 !important; margin-bottom: 25px !important; position: relative !important; display: inline-block !important; margin-top: 1rem !important; }
             h3.mb-2:after { content: "" !important; position: absolute !important; bottom: -12px !important; left: 0 !important; width: 65px !important; height: 5px !important; background: linear-gradient(90deg, #04C9CE, #5F1AE5) !important; border-radius: 0 !important; }
@@ -2822,22 +2775,19 @@ app.index_string = '''
             const navLinks = document.querySelectorAll('.dashboard-sidebar .nav-link');
             const scrollContainer = document.getElementById('page-content');
 
-            // Critical check: If these aren't found, nothing else will work.
             if (navLinks.length === 0 || !scrollContainer) {
                 console.warn('>>> initializeDashboardScripting: Core elements (navLinks or scrollContainer) not found yet. navLinks count:', navLinks.length, 'scrollContainer:', scrollContainer);
-                return false; // Indicate that initialization failed
+                return false; 
             }
             console.log('>>> initializeDashboardScripting: Core elements found. navLinks count:', navLinks.length, 'scrollContainer ID:', scrollContainer.id);
             console.log('>>> Proceeding with full script initialization...');
 
-            // --- Existing Function to handle arrow rotation ---
             function setupArrowObserver(collapseId, navLinkId) {
                 const collapseElement = document.getElementById(collapseId);
                 const navLinkElement = document.getElementById(navLinkId);
                 const arrowElement = navLinkElement ? navLinkElement.querySelector('.nav-arrow') : null;
 
                 if (!collapseElement || !arrowElement || !navLinkElement) {
-                    // console.warn("Observer setup skipped for:", collapseId, navLinkId);
                     return;
                 }
 
@@ -2854,16 +2804,12 @@ app.index_string = '''
                 arrowElement.style.transform = isInitiallyShown ? 'rotate(180deg)' : 'rotate(0deg)';
             }
 
-            // Setup observers for all collapsible sections
             setupArrowObserver('collapse-overview', 'nav-overview');
             setupArrowObserver('collapse-methodology', 'nav-methodology-design');
             setupArrowObserver('collapse-my-role', 'nav-my-role');
             setupArrowObserver('collapse-visualizations', 'nav-visualizations');
-            // --- End Arrow Observer Setup ---
-
-
-            // --- Attach Click Listeners to NavLinks ---
-            window.clickNavInProgress = false; // Global flag to manage scroll events
+            
+            window.clickNavInProgress = false; 
 
             navLinks.forEach(function(link) {
                console.log('>>> Attaching listener to:', link.id || link.href);
@@ -2896,17 +2842,15 @@ app.index_string = '''
                             scrollTo = Math.max(0, scrollTo);
 
                             console.log('Parent NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
-                            scrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' }); // Use auto for instant scroll
+                            scrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' }); 
 
                             if (history.pushState) { history.pushState(null, null, href); }
-                            setTimeout(() => { window.clickNavInProgress = false; }, 150); // Increased timeout
+                            setTimeout(() => { window.clickNavInProgress = false; }, 150); 
                             return;
                         } else if (isParent) {
                             console.log('>>> Click handler: Entering PARENT link NO SCROLL logic (just hash update).');
                             if (history.pushState) { history.pushState(null, null, href); }
-                            // No return here, let default collapse behavior if any also trigger
-                            // The collapse itself might be handled by Bootstrap/Dash component if n_clicks is used
-                            return; // Explicitly return if only hash update and collapse is desired
+                            return; 
                         } else if (targetElement && scrollContainer) {
                             console.log('>>> Click handler: Entering NESTED link scroll logic.');
                             window.clickNavInProgress = true;
@@ -2928,10 +2872,10 @@ app.index_string = '''
                                 scrollTo = Math.max(0, scrollTo);
                             }
                             console.log('Nested NavLink - Attempting to scroll to:', scrollTo, 'for target:', targetId);
-                            scrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' }); // Use auto for instant scroll
+                            scrollContainer.scrollTo({ top: scrollTo, behavior: 'auto' }); 
 
                             if (history.pushState) { history.pushState(null, null, href); }
-                            setTimeout(() => { window.clickNavInProgress = false; }, 150); // Increased timeout
+                            setTimeout(() => { window.clickNavInProgress = false; }, 150); 
                         } else {
                             console.warn('>>> Click handler: NESTED link scroll skipped. targetElement=', targetElement, ' scrollContainer=', scrollContainer);
                         }
@@ -2940,10 +2884,7 @@ app.index_string = '''
                     }
                });
             });
-            // --- End Attach Click Listeners ---
-
-
-            // --- Initial Hash Scroll Logic ---
+            
             const initialHash = window.location.hash;
             if (initialHash && initialHash !== '#') {
                 const targetId = initialHash.substring(1);
@@ -2990,16 +2931,11 @@ app.index_string = '''
                     if(parentCollapse){
                         console.log(">>> Initial scroll: Target is inside a collapsed section:", parentCollapse.id);
                         const collapseId = parentCollapse.id;
-                        // More robustly find controlling nav link
                         const navLinkForCollapse = Array.from(navLinks).find(link => {
                             const linkHref = link.getAttribute('href');
-                            // Check if link's href corresponds to a section that would cause this collapse to open
-                            // This depends on your nav-link to collapse-id mapping.
-                            // Example: if nav-overview controls collapse-overview
                             if (linkHref && linkHref.substring(1) === collapseId.replace('collapse-','')) {
                                 return true;
                             }
-                            // Add more specific checks if your nav-link IDs are different from collapse trigger IDs
                             return false;
                         });
                         if (navLinkForCollapse && navLinkForCollapse.classList.contains('parent-nav-link')) {
@@ -3015,11 +2951,9 @@ app.index_string = '''
                         console.log(">>> Initial scroll: Needs expand. Clicking parent link and delaying scroll.");
                         const parentNavLink = document.getElementById(controllingNavLinkId);
                         if (parentNavLink) {
-                            // Trigger the click that Dash/Bootstrap uses to open the collapse
-                            // This assumes your @app.callback for collapse toggle uses n_clicks
-                            parentNavLink.click(); // This should trigger the Dash callback to open collapse
-                            setTimeout(scrollToTarget, 450); // Scroll after collapse animation (adjust timing if needed)
-                        } else {
+                            parentNavLink.click(); 
+                            setTimeout(scrollToTarget, 450);
+    } else {
                             console.warn(">>> Initial scroll: Controlling nav link element not found by ID:", controllingNavLinkId);
                             setTimeout(scrollToTarget, 150);
                         }
@@ -3033,95 +2967,17 @@ app.index_string = '''
             }
             // --- End Initial Hash Scroll ---
 
-
-            // --- Floating Toolbar Logic ---
-            function setupFloatingToolbar() {
-                console.log(">>> setupFloatingToolbar executing");
-                const visualizationsSection = document.getElementById('visualizations');
-                const floatingToolbar = document.getElementById('floating-viz-toolbar');
-                const sidebar = document.querySelector('.dashboard-sidebar');
-                const firstChartCard = document.querySelector('#vw-chart-control-container'); // Anchor element
-
-                if (!visualizationsSection || !floatingToolbar || !sidebar || !firstChartCard) {
-                    console.warn(">>> Floating toolbar setup skipped: one or more elements not found.", {visualizationsSection, floatingToolbar, sidebar, firstChartCard});
-                    return;
-                }
-                console.log(">>> Floating toolbar: All required elements found.");
-
-                function positionToolbar() {
-                    try {
-                        const sidebarRect = sidebar.getBoundingClientRect();
-                        const chartRect = firstChartCard.getBoundingClientRect();
-                        const toolbarWidth = floatingToolbar.offsetWidth;
-                        const sidebarRight = sidebarRect.right;
-                        const chartLeft = chartRect.left;
-                        const availableSpace = chartLeft - sidebarRight;
-                        let desiredLeft;
-                        if (availableSpace > toolbarWidth + 32) {
-                            desiredLeft = sidebarRight + (availableSpace / 2) - (toolbarWidth / 2);
-                        } else {
-                            desiredLeft = sidebarRight + 16;
-                        }
-                        floatingToolbar.style.left = `${desiredLeft}px`;
-                    } catch (e) {
-                        console.error("Error positioning toolbar:", e);
-                        floatingToolbar.style.left = '19rem';
-                    }
-                }
-
-                function checkScrollPosition() {
-                    const vizTitleElement = visualizationsSection.querySelector('h3');
-                    const hideBoundaryElement = document.getElementById('expansion-matrix-container');
-                    if (!scrollContainer || !vizTitleElement || !floatingToolbar || !hideBoundaryElement) {
-                        // console.warn(">>> Toolbar scroll check skipped: elements missing."); // Can be noisy
-                        return;
-                    }
-                    try {
-                        const titleRect = vizTitleElement.getBoundingClientRect();
-                        const containerRect = scrollContainer.getBoundingClientRect();
-                        const hideBoundaryRect = hideBoundaryElement.getBoundingClientRect();
-                        const toolbarRect = floatingToolbar.getBoundingClientRect();
-                        const viewportMiddle = containerRect.top + (containerRect.height / 2);
-                        const showCondition1 = titleRect.top < viewportMiddle;
-                        const showCondition2 = toolbarRect.bottom < hideBoundaryRect.bottom;
-                        if (showCondition1 && showCondition2) {
-                            if (!floatingToolbar.classList.contains('visible')) {
-                                floatingToolbar.classList.add('visible');
-                            }
-                        } else {
-                            if (floatingToolbar.classList.contains('visible')) {
-                                floatingToolbar.classList.remove('visible');
-                            }
-                        }
-                    } catch(e) { console.error("Error in checkScrollPosition:", e); }
-                }
-
-                if (scrollContainer) {
-                    scrollContainer.addEventListener('scroll', checkScrollPosition);
-                    setTimeout(() => {
-                        console.log(">>> Running initial toolbar position and check");
-                        positionToolbar();
-                        checkScrollPosition();
-                    }, 500); // Increased delay for layout stability
-                }
-                window.addEventListener('resize', positionToolbar);
-            }
-            // Delay setupFloatingToolbar slightly more to ensure chart elements might be ready
-            setTimeout(setupFloatingToolbar, 700);
-            // --- End Floating Toolbar ---
-
             console.log('>>> initializeDashboardScripting: Successfully set up all event listeners and logic.');
-            return true; // Indicate successful initialization
-         } // --- End of initializeDashboardScripting function ---
+            return true; 
+         } 
 
 
-         // --- Polling mechanism to run initializeDashboardScripting ---
          window.addEventListener('load', function() {
             console.log('>>> Load event listener fired <<<');
 
             let attempts = 0;
-            const maxAttempts = 30; // Try for up to 15 seconds (30 * 500ms)
-            const intervalTime = 500; // Check every 500ms
+            const maxAttempts = 30; 
+            const intervalTime = 500; 
 
             function attemptInitialization() {
                 console.log(`>>> attemptInitialization: Attempt ${attempts + 1}/${maxAttempts}`);
@@ -3138,11 +2994,10 @@ app.index_string = '''
                 }
             }
 
-            attemptInitialization(); // Start the process
+            attemptInitialization(); 
 
             console.log('>>> Load event listener processing finished. <<<');
          });
-         // --- End of Script Block ---
         </script>
     </body>
 </html>
@@ -3217,8 +3072,6 @@ def update_limitation_info(n_clicks_list, tab_ids, stored_limitations_content):
     return new_content, new_title, new_class_names # Return content, title, and class names
 # --- END: Revised Limitation Callback ---
 
-# --- Callbacks for populating stores and options ---
-# Removed store_data_on_load callback
 
 # --- Populate Limitation Content Store on Load ---
 @app.callback(Output('limitation-content-store', 'data'), Input('url', 'pathname'))
@@ -3232,83 +3085,124 @@ def init_selected_values(pathname):
      print("Initializing selected-values-store...")
      return {'segment': 'All Segments', 'wtp': 139}
 
-@app.callback(
-    Output('segment-options-container', 'children'),
-    Input('url', 'pathname') # Changed from dummy-store to url
-)
-def update_segment_options(pathname): # Removed stored_data argument
-    if app_data is not None: # Use global app_data
-        # df = pd.DataFrame(stored_data) # No longer needed
-        df = app_data # Use global app_data directly
-        if 'Segment' in df.columns:
-            segments = ['All Segments'] + sorted(df['Segment'].unique())
-            options = [
-                html.Div(
-                    segment,
-                    id={'type': 'segment-option', 'index': segment},
-                    className="segment-option" + (" active" if segment == 'All Segments' else "")
-                 ) for segment in segments
-            ]
-            return options
-    return "Data not available for segments." # Updated message for failure
 
 @app.callback(
-    Output('wtp-options-container', 'children'),
+    [
+        Output({'type': 'static-segment-options', 'chart': ALL}, 'children'),
+        Output({'type': 'static-wtp-options', 'chart': ALL}, 'children')
+    ],
     Input('url', 'pathname')
 )
-def update_wtp_options(pathname):
+def populate_static_toolbar_options(pathname):
+    if app_data is None:
+        no_data_message = "Data not available."
+        num_segment_outputs = len(ctx.outputs_list[0])
+        num_wtp_outputs = len(ctx.outputs_list[1])
+        return [[no_data_message]] * num_segment_outputs, [[no_data_message]] * num_wtp_outputs
+
+    # Define which charts get which controls
+    charts_with_segment_options = ['regional-map', 'expansion-matrix', 'vw-control', 'vw-test', 'wtp-gg']
+    charts_with_wtp_options = ['regional-map', 'expansion-matrix']
+
+    segments = ['All Segments'] + sorted(app_data['Segment'].unique())
+    wtp_prices = [79, 99, 119, 139, 159, 179, 199]
+    default_segment = 'All Segments'
     default_wtp = 139
-    options = [
-        html.Div(
-            f"${p}",
-            id={'type': 'wtp-option', 'index': p},
-            className="wtp-option" + (" active" if p == default_wtp else "")
-        ) for p in [79, 99, 119, 139, 159, 179, 199]
-    ]
-    return options
+
+    segment_options_outputs = [dash.no_update] * len(ctx.outputs_list[0])
+    wtp_options_outputs = [dash.no_update] * len(ctx.outputs_list[1])
+
+    # Populate segment options
+    for i, output_id_obj in enumerate(ctx.outputs_list[0]):
+        chart_id = output_id_obj['id']['chart']
+        if chart_id in charts_with_segment_options:
+            options = [
+                html.Div(
+                    segment_name,
+                    id={'type': 'toolbar-segment-button', 'chart': chart_id, 'index': segment_name},
+                    className="toolbar-segment-option" + (" active" if segment_name == default_segment else "")
+                ) for segment_name in segments
+            ]
+            segment_options_outputs[i] = options
+
+    # Populate WTP options
+    for i, output_id_obj in enumerate(ctx.outputs_list[1]):
+        chart_id = output_id_obj['id']['chart']
+        if chart_id in charts_with_wtp_options:
+            options = [
+                html.Div(
+                    f"${price}",
+                    id={'type': 'toolbar-wtp-button', 'chart': chart_id, 'index': price},
+                    className="toolbar-wtp-option" + (" active" if price == default_wtp else "")
+                ) for price in wtp_prices
+            ]
+            wtp_options_outputs[i] = options
+            
+    return segment_options_outputs, wtp_options_outputs
+
 
 @app.callback(
     Output('selected-values-store', 'data', allow_duplicate=True),
-    Output({'type': 'segment-option', 'index': ALL}, 'className'),
-    Output({'type': 'wtp-option', 'index': ALL}, 'className'),
-    Input({'type': 'segment-option', 'index': ALL}, 'n_clicks'),
-    Input({'type': 'wtp-option', 'index': ALL}, 'n_clicks'),
+    Output({'type': 'toolbar-segment-button', 'chart': ALL, 'index': ALL}, 'className'),
+    Output({'type': 'toolbar-wtp-button', 'chart': ALL, 'index': ALL}, 'className'),
+    Input({'type': 'toolbar-segment-button', 'chart': ALL, 'index': ALL}, 'n_clicks'),
+    Input({'type': 'toolbar-wtp-button', 'chart': ALL, 'index': ALL}, 'n_clicks'),
     State('selected-values-store', 'data'),
-    State({'type': 'segment-option', 'index': ALL}, 'id'),
-    State({'type': 'wtp-option', 'index': ALL}, 'id'),
+    State({'type': 'toolbar-segment-button', 'chart': ALL, 'index': ALL}, 'id'),
+    State({'type': 'toolbar-wtp-button', 'chart': ALL, 'index': ALL}, 'id'),
     prevent_initial_call=True
 )
-def update_selected_values_and_styles(segment_clicks, wtp_clicks, current_values, segment_ids, wtp_ids):
-    triggered_id = ctx.triggered_id
-    print(f"Toolbar update triggered by: {triggered_id}")
-    if not triggered_id: raise dash.exceptions.PreventUpdate
-    if isinstance(triggered_id, str): raise dash.exceptions.PreventUpdate
+def update_selected_values_from_static_toolbars(segment_clicks, wtp_clicks, current_values, segment_ids, wtp_ids):
+    triggered_id_obj = ctx.triggered_id
+    print(f"Static Toolbar update triggered by: {triggered_id_obj}")
+
+    if not triggered_id_obj:
+        raise dash.exceptions.PreventUpdate
+    
+    # Check if triggered_id_obj is a string (can happen on initial load if not handled carefully)
+    if isinstance(triggered_id_obj, str):
+        print(f"Static Toolbar update triggered by string ID: {triggered_id_obj}, preventing update.")
+        raise dash.exceptions.PreventUpdate
 
     current_segment = current_values.get('segment', 'All Segments')
     current_wtp = current_values.get('wtp', 139)
     new_values = current_values.copy()
 
-    prop_id = triggered_id.get('index')
-    type_id = triggered_id.get('type')
+    clicked_item_type = triggered_id_obj.get('type')
+    clicked_item_index = triggered_id_obj.get('index') # This is the value (e.g., 'Curious Skeptics' or 139)
+    # clicked_item_chart = triggered_id_obj.get('chart') # Chart specific to the button clicked
 
-    if type_id == 'segment-option' and prop_id is not None:
-        new_values['segment'] = prop_id
+    if clicked_item_type == 'toolbar-segment-button' and clicked_item_index is not None:
+        new_values['segment'] = clicked_item_index
         print(f"Segment selected: {new_values['segment']}")
-    elif type_id == 'wtp-option' and prop_id is not None:
-        new_values['wtp'] = prop_id
+    elif clicked_item_type == 'toolbar-wtp-button' and clicked_item_index is not None:
+        new_values['wtp'] = clicked_item_index
         print(f"WTP selected: {new_values['wtp']}")
     else:
+        print("No relevant toolbar button was clicked or index is missing.")
         raise dash.exceptions.PreventUpdate
 
-    segment_classes = [
-        "segment-option active" if seg_id['index'] == new_values['segment'] else "segment-option"
-        for seg_id in segment_ids
-    ]
-    wtp_classes = [
-        "wtp-option active" if wtp_id['index'] == new_values['wtp'] else "wtp-option"
-        for wtp_id in wtp_ids
-    ]
-    return new_values, segment_classes, wtp_classes
+    segment_button_class_names = []
+    for seg_id_obj in segment_ids:
+        # seg_id_obj is {'type': 'toolbar-segment-button', 'chart': 'chart_name', 'index': 'segment_value'}
+        current_button_segment_value = seg_id_obj['index']
+        base_class = "toolbar-segment-option"
+        if current_button_segment_value == new_values['segment']:
+            segment_button_class_names.append(f"{base_class} active")
+        else:
+            segment_button_class_names.append(base_class)
+
+    wtp_button_class_names = []
+    for wtp_id_obj in wtp_ids:
+        # wtp_id_obj is {'type': 'toolbar-wtp-button', 'chart': 'chart_name', 'index': price_value}
+        current_button_wtp_value = wtp_id_obj['index']
+        base_class = "toolbar-wtp-option"
+        if current_button_wtp_value == new_values['wtp']:
+            wtp_button_class_names.append(f"{base_class} active")
+        else:
+            wtp_button_class_names.append(base_class)
+            
+    return new_values, segment_button_class_names, wtp_button_class_names
 
 
 # --- Run the App Server ---
@@ -3326,11 +3220,7 @@ if __name__ == '__main__':
         print("\n*** ACTION NEEDED: Created 'assets' folder. ***")
         print(f"*** Please move your images ('final flowchart.png', 'conjoint_rejection_discussion.png', etc.) to this folder. ***\n")
 
-    # Global app_data is already loaded or None at this point.
-    # Callbacks are defined globally.
-
     if app_data is None:
-        # Message already printed by global load attempt if it failed (e.g. file not found, CSV error)
         print(f"\n*** WARNING: Global data loading failed (or file '{DATA_FILE}' not found/unreadable). Dashboard will run with limited functionality. ***\n")
     else:
         print(f"Global data from '{DATA_FILE}' successfully loaded. Starting server...")
