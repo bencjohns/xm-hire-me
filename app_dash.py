@@ -529,7 +529,7 @@ def create_expansion_matrix(segment_filter='All Segments', wtp_price_point=139):
         xaxis_range=[min(0, region_data['Willing (%)'].min()*0.9), max(1, region_data['Willing (%)'].max()*1.05)], # X-axis range unchanged
         # INCREASE Y-AXIS PADDING MORE:
         yaxis_range=[min(0, region_data['AwarenessOpportunity'].min()*0.85), max(1, region_data['AwarenessOpportunity'].max()*1.25)], # Changed min padding to 0.85, max padding to 1.25
-        margin=dict(t=80, b=80, l=40, r=40), # Keep current margins
+        margin=dict(t=65, b=5, l=40, r=40), # Keep current margins
         height=600 # <--- ADDED EXPLICIT FIGURE HEIGHT (adjust value if needed)
     )
     return fig
@@ -937,12 +937,12 @@ app.layout = html.Div([
         dbc.Card(dbc.CardBody([html.Div([html.Span("Project Sections", className="section-header")],className="d-flex align-items-center")], className="p-2"), className="mb-2 section-header-card"),
         dbc.Nav([
             dbc.NavLink(html.Span(["Project Overview & Hypothesis", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#overview", id="nav-overview", active="exact", className="nav-link parent-nav-link", n_clicks=0),
-            dbc.Collapse(html.Div([ dbc.NavLink("Goal", href="#goal", id="nav-goal", active="exact", className="nav-link nested-link"), dbc.NavLink("Objective", href="#objective", id="nav-objective", active="exact", className="nav-link nested-link"), dbc.NavLink("Observations", href="#observations", id="nav-observations", active="exact", className="nav-link nested-link"), dbc.NavLink("Approach", href="#approach", id="nav-approach", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-overview", is_open=False),
+            dbc.Collapse(html.Div([ dbc.NavLink("Goal", href="#goal", id="nav-goal", active="exact", className="nav-link nested-link"), dbc.NavLink("Objective", href="#objective", id="nav-objective", active="exact", className="nav-link nested-link"), dbc.NavLink("Observations & Hypotheses", href="#observations", id="nav-observations", active="exact", className="nav-link nested-link"), dbc.NavLink("Approach", href="#approach", id="nav-approach", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-overview", is_open=False),
             dbc.NavLink(html.Span(["Methodology & Design", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#methodology-design", id="nav-methodology-design", active="exact", className="nav-link parent-nav-link", n_clicks=0),
             dbc.Collapse(html.Div([ dbc.NavLink("Two-Phase Gabor-Granger", href="#gabor-granger", id="nav-gabor-granger", active="exact", className="nav-link nested-link"), dbc.NavLink("Assuming Uplift in WTP", href="#wtp", id="nav-wtp", active="exact", className="nav-link nested-link"), dbc.NavLink("Van Westendorp", href="#van-westendorp", id="nav-van-westendorp", active="exact", className="nav-link nested-link"), dbc.NavLink("Control Group", href="#control-group", id="nav-control-group", active="exact", className="nav-link nested-link"), dbc.NavLink("Competitive Adjustment", href="#competitive-adjustment", id="nav-competitive-adjustment", active="exact", className="nav-link nested-link"), dbc.NavLink("Population Sampling", href="#population-sampling", id="nav-population-sampling", active="exact", className="nav-link nested-link"), dbc.NavLink("Distance-Weighted Awareness Proxy", href="#awareness-proxy", id="nav-awareness-proxy", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-methodology", is_open=False),
             dbc.NavLink(html.Span(["My Role: Guiding AI", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#my-role", id="nav-my-role", active="exact", className="nav-link parent-nav-link", n_clicks=0),
             dbc.Collapse(html.Div([ dbc.NavLink("Rejecting Inappropriate Methodology", href="#rejecting-methodology", id="nav-rejecting-methodology", active="exact", className="nav-link nested-link"), dbc.NavLink("Identifying Critical Measurement Ambiguity", href="#identifying-ambiguity", id="nav-identifying-ambiguity", active="exact", className="nav-link nested-link"), dbc.NavLink("Refining Awareness Proxy Methods", href="#refining-proxy", id="nav-refining-proxy", active="exact", className="nav-link nested-link"), dbc.NavLink("Pushing for Deeper Portfolio Analysis", href="#pushing-for-deeper-portfolio-analysis", id="nav-pushing-for-deeper-portfolio-analysis", active="exact", className="nav-link nested-link"), ], className="nested-links-container"), id="collapse-my-role", is_open=False),
-            dbc.NavLink("Survey Flow", href="#survey-flow", id="nav-survey-flow", active="exact", className="nav-link"),
+            dbc.NavLink("Survey Flowchart", href="#survey-flow", id="nav-survey-flow", active="exact", className="nav-link"),
             # Updated Interactive Visualizations Link
             dbc.NavLink(html.Span(["Interactive Visualizations", html.I(className="fas fa-chevron-down nav-arrow")], className="nav-link-content"), href="#visualizations", id="nav-visualizations", active="exact", className="nav-link parent-nav-link", n_clicks=0),
             # New Collapse for Visualizations
@@ -975,11 +975,12 @@ app.layout = html.Div([
         html.H1(["Kizik Footwear: ", html.Br(), "Simulated Price Sensitivity & Expansion Strategy"], className="text-center mb-4", id="title", style={'margin-top': '2rem', 'font-size': '2.5rem', 'font-weight': '700'}),
 
         # --- Text Sections ---
-        # (Keep all original text sections as they were)
         html.Div([
-            html.H2("Project Overview & Hypothesis", className="mb-4 text-center", id="overview-heading", style={'font-size': '2.5rem', 'font-weight': '700', 'width': '100%'}),
-            dcc.Markdown("""""", className="text-content")
+            html.H3("Project Overview & Hypotheses", className="mb-2", style={'font-size': '3rem', 'font-weight': '600'}),
+            dcc.Markdown("""
+            """, className="text-content")
         ], id="overview", className="text-container"),
+
         html.Div([
             html.H3("Goal", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
@@ -993,18 +994,18 @@ app.layout = html.Div([
         html.Div([
             html.H3("Objective", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
-                To construct a realistic, statistically plausible dataset grounded in publicly available data parameters - without having direct access to private data to build a GAN to analyze, refine, and ultimately generate models to create true synthetic responses. This modeled dataset allowed for rigorous testing of advanced survey methodologies, including:
+                To construct a realistic, statistically plausible dataset grounded in publicly available data - without having direct access to private data to build a GAN to analyze, refine, and ultimately generate models to create true synthetic responses. This modeled dataset allowed for rigorous testing of advanced survey methodologies, including:
 
                 * Gabor-Granger
                 * Van Westendorp
-                * Control Group
-                * Skip Logic, etc.
+                * Multiple Linear Regression
 
                 ...validation of analytical workflows (segmentation, regression), and the generation of preliminary insights regarding Kizik's pricing and market expansion opportunities, essentially demonstrating an end-to-end research process.
             """, className="text-content")
         ], id="objective", className="text-container"),
+
         html.Div([
-            html.H3("Observations", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
+            html.H3("Observations & Hypotheses", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
                 What sparked this project was an interesting trend I was seeing: I had purchased four pairs of Kiziks over the last few months - all in 9/10 condition or brand new, never worn - *but they were all significantly underpriced* relative to their retail value.
 
@@ -1014,17 +1015,22 @@ app.layout = html.Div([
 
                 I knew I didn't have the time or resources to conduct an extensive field survey, but from the 2025 Market Research Trends report, podcasts with Isabelle Zdatny and Ali Henriques, I knew that synthetic data - or something adjacent to it - just might be able to get me some answers.
             """, className="text-content")
-        ], id="observations", className="text-container"),
+        ], id="observations", className="text-container", style={'margin-bottom': '0rem !important'}),
 
         html.Div([
             html.Img(
                 src=app.get_asset_url('kizik pricing.png'),
                 alt="discounts for days",
-                 style={'display': 'block', 'margin': 'auto', 'max-width': '100%', 'height': 'auto', 'border-radius': '8px'}
+                 style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto', 'max-width': '100%', 'height': 'auto', 'border-radius': '8px'}
             )
-        ], id="kizik-pricing", className="text-container"),
-
-
+        ], id="kizik-pricing", style={ 
+                            'width': '80%',     # Or '95%', '1000px', '1200px' etc.
+                            'max-width': '1200px', # Optional: A new, larger max-width if desired
+                            'margin-left': 'auto', 
+                            'margin-right': 'auto',
+                            'margin-top': '0.01rem',   # Add some spacing above
+                            'margin-bottom': '4rem' # Add some spacing below
+                           }),
 
         html.Div([
             html.H3("Approach and Process", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
@@ -1036,8 +1042,7 @@ app.layout = html.Div([
                 **Below is a high-level overview of my overall process and the tools I used:**
             """, className="text-content")
             
-        ], id="approach", className="text-container"),
-
+        ], id="approach", className="text-container", style={'margin-top': '1.5rem !important', 'margin-bottom': '0rem !important'}),
 
         html.Div([
             html.Img(
@@ -1046,7 +1051,14 @@ app.layout = html.Div([
                  style={'display': 'block', 'margin': 'auto', 'max-width': '100%', 'height': 'auto', 'border-radius': '8px'}
             )
         
-        ], id="qualtrics-process", className="text-container"),
+        ], id="qualtrics-process", style={ 
+                            'width': '80%',     # Or '95%', '1000px', '1200px' etc.
+                            'max-width': '1200px', # Optional: A new, larger max-width if desired
+                            'margin-left': 'auto', 
+                            'margin-right': 'auto',
+                            'margin-top': '0.01rem',   # Add some spacing above
+                            'margin-bottom': '1rem' # Add some spacing below
+                           }),
 
         html.Div([ # Standard text container for the block
             html.P([html.Strong("", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
@@ -1062,7 +1074,7 @@ app.layout = html.Div([
                 
                 """, className="text-content", style={'margin-top': '0'}),
 
-        ], id="approach-explanation", className="text-container"),
+        ], id="approach-explanation", className="text-container", style={'margin-top': '1.5rem !important', 'margin-bottom': '0rem !important'}),
 
         html.Div([
             html.H3("Methodology and Design", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'}),
@@ -1245,7 +1257,7 @@ I directed Claude to explore better awareness proxies given the nature of our su
 html.P([html.Strong("Outcome", style={'font-size': '18px', 'font-weight': 'bold', 'font-family': 'Arial, sans-serif'})], style={'margin': '1.5rem 0 0.5rem 0'}),
 dcc.Markdown('''
     Pushing for improvement and directing that improvement resulted in Claude implementing a distance-weighted awareness proxy (calculate_weighted_awareness function) in the code used to run the simulation. The model now takes into account the decreased impact of stores farther away from population centers, creating a more analytically sound and realistic awareness metric, which was then used in regression and segmentation analyses later on in the experiment.
-''', className="text-content", style={'margin-top': '0', 'font-family': 'Arial, sans-serif', 'font-size': '16px'}),
+''', className="text-content", style={'margin-top': '0', 'font-family': 'Arial, sans-serif', 'font-size': '16px', 'margin-bottom': '2rem'}),
 
 html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs Retail Store Weights", style={'font-size': '18px', 'font-weight': 'bold', 'font-family': 'Arial, sans-serif'})], style={'margin': '1.5rem 0 0.5rem 0'}),
             dcc.Markdown('''
@@ -1310,27 +1322,34 @@ html.P([html.Strong("Additional Awareness Logic Refinements: Flagship Stores vs 
 
         # --- End My Role Sections ---
 
-        # --- Survey Flow Section - MODIFIED for Wider Display ---
-        html.Div([ # Outer Div for the entire section
-            # The H3 Title - Note: This will also span wider now, might need centering or max-width if desired
-            html.H3(
-                "Survey Flow", 
-                className="mb-2", # Keep existing class
-                style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'} # Keep existing style
-            ),
-            # Inner Div wrapping ONLY the image - MODIFIED: Removed chart-card class and fixed pixel style
+# --- Survey Flow Section - MODIFIED for Wider Display ---
+        html.Div([ # Outer Div for the entire section (this one is now full-width)
+            
+            # NEW WRAPPER DIV FOR THE TITLE (to center it and give it max-width)
+            html.Div([
+                html.H3(
+                    "Survey Flowchart", 
+                    className="mb-2", 
+                    style={'font-size': '1.5rem', 'font-weight': '600', 'width': '100%'} # H3 takes full width of this new parent
+                )
+            ], style={ # Style this wrapper like your other centered title wrappers or text-container
+                'max-width': '780px',  # Or '900px' if you used that for the Viz title wrapper
+                'margin-left': 'auto',
+                'margin-right': 'auto',
+                'width': '100%' 
+            }),
+            # END NEW WRAPPER DIV
+
+            # Inner Div wrapping ONLY the image (this one can remain wider)
             html.Div([ 
                 html.Img( 
                     src=app.get_asset_url('final flowchart.png'), 
                     alt="Qualtrics Survey Flowchart", 
-                    # Original Img style, potentially remove padding if it was there
                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto', 'max-width': '100%', 'height': 'auto'} 
                 )
-            # MODIFIED: Style for the inner Div - Use percentage width and center
-            ], style={'width': '95%', 'margin': '1.5rem auto 0 auto'}), # Using 95% width, centered, added top margin
+            ], style={'width': '95%', 'margin': '1.5rem auto 0 auto'}),
 
-        # MODIFIED: Removed className="text-container" from the outer Div, added margin-bottom
-        ], id="survey-flow", style={'width': '100%', 'margin-bottom': '3rem'}), # Ensure spacing below the section
+        ], id="survey-flow", style={'width': '100%', 'margin-bottom': '3rem'}),
 
         # --- Visualizations Section (REORDERED) ---
         html.Div([ # This is the main Div with id="visualizations"
@@ -1409,11 +1428,12 @@ The relationship between these prices and their answers forms two critical price
 
 The prices between PMC and PME form the **overall acceptable range of price points**. The **OPP (Optimal Price Point)** is the specific price where the percentage of respondents who find the price "too cheap" equals the percentage who find it "too expensive." This range is where the majority of respondents in a particular segment would consider purchasing the product.
                 """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container"), 
+            ], className="text-container", style={'margin-bottom': '2rem'}),
 
             # --- WTP Gabor-Granger Chart ---
             html.Div(dcc.Graph(id='wtp-gg-chart', config=STANDARD_GRAPH_CONFIG),
-                     className="chart-card", 
+                     className="chart-card",
+                     style={'margin-top': '4rem'},
                      id='wtp-gg-chart-container'),
             # MODIFIED TOOLBAR STRUCTURE
             html.Div(className="static-chart-toolbar", children=[
@@ -1440,6 +1460,7 @@ Yes! While some segments are more flexible on price, the overall trend is that e
             # --- Regional WTP Map ---
             html.Div(dcc.Graph(id='regional-wtp-map', config=STANDARD_GRAPH_CONFIG), 
                      className="chart-card", 
+                     style={'margin-top': '4rem'},
                      id='regional-map-container'),
             # MODIFIED TOOLBAR STRUCTURE (WITH BOTH CONTROLS)
             html.Div(className="static-chart-toolbar", children=[
@@ -1469,59 +1490,10 @@ Yes! While some segments are more flexible on price, the overall trend is that e
                 """, className="text-content", style={'margin-top': '0'})
             ], className="text-container"),
 
-
-            # --- Expansion Priority Matrix ---
-            html.Div(dcc.Graph(id='expansion-matrix-chart', config=STANDARD_GRAPH_CONFIG), 
-                     className="chart-card", 
-                     id='expansion-matrix-container'),
-            # MODIFIED TOOLBAR STRUCTURE (WITH BOTH CONTROLS)
-            html.Div(className="static-chart-toolbar", children=[
-                html.Div(className="toolbar-controls-wrapper", children=[
-                    # Segment Group
-                    html.Div(className="toolbar-control-group segment-group", children=[
-                        dbc.Label("Customer Segment", className="toolbar-label"),
-                        html.Div(id={'type': 'static-segment-options', 'chart': 'expansion-matrix'}, className='toolbar-options-list')
-                    ]),
-                    # Divider
-                    html.Div(className="toolbar-divider"),
-                    # WTP Group
-                    html.Div(className="toolbar-control-group wtp-group", children=[
-                        dbc.Label("WTP Price Point", className="toolbar-label"),
-                        html.Div(id={'type': 'static-wtp-options', 'chart': 'expansion-matrix'}, className='toolbar-options-grid')
-                    ])
-                ])
-            ]),
-            html.Div([ 
-                html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
-                dcc.Markdown("""
-The Expansion Priority Matrix identifies key regions for market growth by plotting Market Attractiveness against Market Entry Opportunity. To make things more concrete, if you wanted to find a market for expansion that would respond well to Kizik products, you'd want to find something in the top right quadrant. There, you'll find the perfect blend of people willing to pay higher prices who also have less brand awareness, or more room to grow brand recognition.
-
-**Quadrants**
-
-Overall, the quadrants in this matrix can help a researcher understand which areas to avoid and which areas are worth potential future investment.
-
-*"High Priority"* (Top right: high attractiveness, high opportunity)
-
-*"Optimize"* (Bottom right: high attractiveness, low opportunity)
-
-*"Monitor"* (Top left: low attractiveness, high opportunity)
-
-*"Lower Priority"* (Bottom left: attractiveness, low opportunity)
-
-* **Market Attractiveness (X-axis)** shows the percentage of respondents in a region willing to pay the selected price point, indicating immediate revenue potential.
-
-* **Market Entry Opportunity (Y-axis)** represents the inverse of current brand awareness (using the refined Brand Awareness proxy metric), highlighting areas with the most room to grow brand recognition. Higher scores mean lower current awareness, which again means that there's significant room to grow and improve brand awareness.
-                """, className="text-content", style={'margin-top': '0'}),
-                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
-                dcc.Markdown("""
-                    At $139 and $159 (both common price points for Kizik's current offerings), the West and Northeast regions are the most attractive. The Northeast is fairly unique, in that it has both a higher brand awareness and a high willingness to pay, moreso than the West. It also has three flagship stores, while the West only has two. The West as well represents a great opportunity for continuous expansion, not to mention relatively reduced shipping times from their warehouse in Lindon.
-                """, className="text-content", style={'margin-top': '0'})
-            ], className="text-container"),
-
-
             # --- Regression Coefficient Plot (No Controls) ---
             html.Div(dcc.Graph(id='regression-coef-plot', config=STANDARD_GRAPH_CONFIG), 
                      className="chart-card", 
+                     style={'margin-top': '4rem'},
                      id='regression-coef-container'),
             html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
@@ -1532,7 +1504,10 @@ Overall, the quadrants in this matrix can help a researcher understand which are
 *   The goal is to identify which characteristics (demographics, attitudes, awareness) have a **statistically significant** relationship with how high a price someone will tolerate before deeming it "Expensive". And of course, this only represents the Test Group (those who did see the conceptual feature explanation of Kizik's hands-free tech). Running the MLR only on the Test Group allows us to understand what influences the perception of "Expensive" on those who are *aware* of the technology. Ideally, by doing this, you'd be able to start building more accurate segments for marketing campaigns, product research, etc.
 
 
+
 **What the Components Mean**
+
+
 
 1.  **Y-Axis (Vertical):** Lists the **Predictor Variables** included in the regression model. These are the factors the model tested to see if they influence the "Expensive" price threshold.
     *   Examples: `IncomeBracket: Less than $25k`, `AgeGroup: 65+`, `Region: West`, `ValuePerceptionPost`, `BrandAwarenessProxy_DistWt`.
@@ -1558,17 +1533,33 @@ This chart tells you **which factors significantly push the "Expensive" price po
                 """, className="text-content", style={'margin-top': '0'}),
             ], className="text-container"),
 
+            html.Div([ 
+                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                dcc.Markdown("""
+                    People in the West, Northeast, and those in higher income brackets ($150k+) are more likely to tolerate higher prices before labeling them "Expensive." Conversely, lower income brackets produce the opposite effect, while the tail ends of the age distribution seem to be at odds with each other relative to price perception: the older you are (65+) the less likely you are to consider higher prices while younger age brackets (25-34) have a higher tolerance for raised prices before labeling them "Expensive." 
+                    
+                    In part, I believe that's why this experiment resonates with me so much: those who most likely need these shoes the most (due to mobility issues) are the ones who are most price sensitive. Generally speaking, it's part of their generation's sociohistorical profile: they tend to focus more on practicality and are therefore more likely to be more price-sensitive. That's why effective marketing campaigns are so necessary: well-communicated innovations solving real pain points can genuinely alleviate legitimate, painful struggle.
+                """, className="text-content", style={'margin-top': '0'}),
+            ], className="text-container"),
+
             # --- Top 3 Drivers Chart (No Controls) ---
             html.Div(dcc.Graph(id='top-drivers-chart', config=STANDARD_GRAPH_CONFIG), 
                      className="chart-card", 
+                     style={'margin-top': '4rem'},
                      id='top-drivers-container'),
             html.Div([ 
                 html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     This chart is the result of asking our "respondents'" to rate the importance of a variety of different shoe attributes, like comfort, price, style, hands-free convenience, etc. It's a bar chart representation of a cross-tabs (cross-tabulations) analyis. Cross-tab analysis shows the number or frequency of respondents that share the same value for a given attribute, like the percentage of "Curious Skeptics" who value Style.
 
-                    It's important because price isn't always a core motivator when making purchase decisions, and it varies by segment. Some segments are willing to trade it off for comfort or the unique  tech that Kizik offers ("HandsFree Convenience"). For marketers and ad teams, it helps define core marketing messages by understanding which benefits - and tradeoffs - resonate most with consumers.
 
+                """, className="text-content", style={'margin-top': '0'}),
+            ], className="text-container"),
+
+            html.Div([ 
+                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                dcc.Markdown("""
+                    Charts like these are important because price isn't always a core motivator when making purchase decisions, and it varies by segment. Some segments are willing to trade it off for comfort or the unique  tech that Kizik offers ("HandsFree Convenience"). For marketers and ad teams, it helps define core marketing messages by understanding which benefits - and tradeoffs - resonate most with consumers
                     As you can see, Premium Enthusiasts greatly value Style and Kizik's tech, while Traditionalists are exactly as they sound with an overwhelming emphasis on Price, Durability, and Comfort, while averaging 4.5% across the other purchase drivers.
                 """, className="text-content", style={'margin-top': '0'}),
             ], className="text-container"),
@@ -1576,6 +1567,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
             # --- Primary Usage Chart (No Controls) ---
             html.Div(dcc.Graph(id='primary-usage-chart', config=STANDARD_GRAPH_CONFIG), 
                      className="chart-card", 
+                     style={'margin-top': '4rem'},
                      id='primary-usage-container'),
             html.Div([
                 html.P([
@@ -1606,7 +1598,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
             dcc.Markdown("""
             These segments represent the simulated, pre-defined consumer groups present in the study - while the data is helpful, I've gone ahead and included what that data could represent in terms of a hypothetical persona for each segment. It's fun to imagine them as real people, with real lives, likes, and dislikes.
             """, className="text-content") # Updated placeholder
-        ], id="segment-profiles", className="text-container", style={'margin-bottom': '1rem'}),
+        ], id="segment-profiles", className="text-container", style={'margin-bottom': '0rem !important'}),
 
         html.Div([
              # NEW: Title Display Area (populated by callback)
@@ -1614,7 +1606,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
                 SEGMENT_INFO[SEGMENT_ORDER[0]]["title"], # Load default title
                 id='segment-title-display',
                 className="segment-info-title", # Reuse class for consistency
-                style={'font-weight': 'bold', 'margin-bottom': '1rem', 'padding-left': '1rem'} # Add padding
+                style={'font-weight': 'bold', 'margin-bottom': '1rem', 'margin-top': '1rem !important', 'padding-left': '1rem'} # Add padding
             ),
             # Content Display Area (populated by callback)
             html.Div(id='segment-content-display', children=create_segment_content(SEGMENT_ORDER[0])), # Load default content
@@ -1637,7 +1629,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
                 dcc.Markdown("""
                     Before we advance to the rest of the key findings, I'd like to take a moment to address the two core hypotheses I set out to test:
                     
-                    ***"Would people’s WTP increase if they knew just how easy it was to slip them on?"***
+                    ***"Would respondents' WTP increase if they knew just how easy it was to slip them on?"***
 
                     ***"Is out-of-state WTP so low because of low out-of-state brand awareness?"***
 
@@ -1648,13 +1640,13 @@ This chart tells you **which factors significantly push the "Expensive" price po
         
             # --- Keep the original Overview block that was here ---
             html.Div([ # Standard text container for the block
-                html.P([html.Strong("Would people’s WTP increase if they knew just how easy it was to slip them on?", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Would respondents' WTP increase if they knew just how easy it was to slip them on?", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '4rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     """, 
                     className="text-content", style={'margin-top': '0'}),
 
             # --- INSERTED TITLE and TABLE ---
-                html.P("WTP Analysis Summary by Segment", style={'text-align': 'center', 'font-weight': 'bold', 'margin-top': '1rem', 'margin-bottom': '0.5rem'}),
+                html.P("WTP Analysis Summary by Segment", style={'text-align': 'center', 'font-weight': 'bold', 'margin-top': 'rem', 'margin-bottom': '0.5rem'}),
                 dcc.Markdown("""
 
                     ```text
@@ -1690,7 +1682,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
                 """, className="text-content", style={'margin-top': '0'}),
 
             # --- END COPY THIS BELOW FOR STRONG SECTIONS
-                html.P([html.Strong("Is out-of-state WTP so low because of low out-of-state brand awareness?", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Is out-of-state WTP so low because of low out-of-state brand awareness?", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '2rem 0 0.5rem 0'}),
                 dcc.Markdown("""
 
                     **Outcome:** *Brand Awareness *does* increase WTP, but relatively less than other factors*
@@ -1708,9 +1700,9 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
                     So overall, the actual impact of this awareness proxy appears to be fairly modest in this specific study. Again, having additional ad data and other valuable marketing metrics to really inform brand awareness would most likely bolster the effect it has on WTP.
                    
-                    """, className="text-content", style={'margin-top': '0'}),
+                    """, className="text-content", style={'margin-top': '2rem !important'}),
 
-                html.P([html.Strong("West and Northeast Provide Higher WTP Baseline Percentages", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("West and Northeast Provide Higher WTP Baseline Percentages", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '2rem 0 0.5rem 0'}),
                 dcc.Markdown("""
                     
                     Even after accounting for demographics and awareness, the West and Northeast show significant positive coefficients, moreso than the South or Midwest, again meaning that someone from the West or Northeast is more likely to have a higher willingness to pay after having the feature “explained” to them than other areas, even while taking into account all the other predictor factors like income bracket, age, etc. 
@@ -1726,7 +1718,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
                     """, className="text-content", style={'margin-top': '0'}),
 
-                html.P([html.Strong("Different Segments Require Different Approaches", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Different Segments Require Different Approaches", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '2rem 0 0.5rem 0'}),
                 dcc.Markdown("""    
                     
                     The varying segments display different purchase motivations and ideal usage scenarios.
@@ -1753,15 +1745,69 @@ This chart tells you **which factors significantly push the "Expensive" price po
                     
                     Overall, the data provides rich context into different areas for expansion, and opportunities to serve current segments with products that better align with their preferences, simulated WTP, and budget.
                     
+                    In this section, we'll start at the regional level and then narrow in on the state level.
+                
                     """, className="text-content", style={'margin-top': '0'}),
+    
+                # --- Expansion Priority Matrix ---
+            html.Div(dcc.Graph(id='expansion-matrix-chart', config=STANDARD_GRAPH_CONFIG), 
+                     className="chart-card", 
+                     style={'margin-top': '4rem'},
+                     id='expansion-matrix-container'),
+            # MODIFIED TOOLBAR STRUCTURE (WITH BOTH CONTROLS)
+            html.Div(className="static-chart-toolbar", children=[
+                html.Div(className="toolbar-controls-wrapper", children=[
+                    # Segment Group
+                    html.Div(className="toolbar-control-group segment-group", children=[
+                        dbc.Label("Customer Segment", className="toolbar-label"),
+                        html.Div(id={'type': 'static-segment-options', 'chart': 'expansion-matrix'}, className='toolbar-options-list')
+                    ]),
+                    # Divider
+                    html.Div(className="toolbar-divider"),
+                    # WTP Group
+                    html.Div(className="toolbar-control-group wtp-group", children=[
+                        dbc.Label("WTP Price Point", className="toolbar-label"),
+                        html.Div(id={'type': 'static-wtp-options', 'chart': 'expansion-matrix'}, className='toolbar-options-grid')
+                    ])
+                ])
+            ]),
 
-                html.P([html.Strong("Expansion Opportunities", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+            html.Div([ 
+                html.P([html.Strong("Overview", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                dcc.Markdown("""
+                    The Expansion Priority Matrix identifies key regions for market growth by plotting Market Attractiveness against Market Entry Opportunity. To make things more concrete, if you wanted to find a market for expansion that would respond well to Kizik products, you'd want to find something in the top right quadrant. There, you'll find the perfect blend of people willing to pay higher prices who also have less brand awareness, or more room to grow brand recognition.
+
+                    **Quadrants**
+
+                    Overall, the quadrants in this matrix can help a researcher understand which areas to avoid and which areas are worth potential future investment.
+
+                    *"High Priority"* (Top right: high attractiveness, high opportunity)
+
+                    *"Optimize"* (Bottom right: high attractiveness, low opportunity)
+
+                    *"Monitor"* (Top left: low attractiveness, high opportunity)
+
+                    *"Lower Priority"* (Bottom left: attractiveness, low opportunity)
+
+                    * **Market Attractiveness (X-axis)** shows the percentage of respondents in a region willing to pay the selected price point, indicating immediate revenue potential.
+
+                    * **Market Entry Opportunity (Y-axis)** represents the inverse of current brand awareness (using the refined Brand Awareness proxy metric), highlighting areas with the most room to grow brand recognition. Higher scores mean lower current awareness, which again means that there's significant room to grow and improve brand awareness.
+                """, className="text-content", style={'margin-top': '0'}),
+                
+                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                dcc.Markdown("""
+                    At $139 and $159 (both common price points for Kizik's current offerings), the West and Northeast regions are the most attractive. The Northeast is fairly unique, in that it has both a higher brand awareness and a high willingness to pay, moreso than the West. It also has three flagship stores, while the West only has two. The West as well represents a great opportunity for continuous expansion, not to mention relatively reduced shipping times from their warehouse in Lindon.
+                """, className="text-content", style={'margin-top': '0'})
+            ], className="text-container"),
+
+
+                html.P([html.Strong("State-Specific Expansion Opportunities", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
                     dcc.Markdown("""""", className="text-content", style={'margin-top': '0'}),
 
                 html.P("Top 5 States For Potential Expansion (Excluding UT)", style={'text-align': 'center', 'font-weight': 'bold', 'margin-top': '1rem', 'margin-bottom': '0.5rem'}),
                     dcc.Markdown("""
                         ```text
-                        | State | Avg       | Opportunity     | WTP %  | Respondent | Rank_Opp | Rank_WTP | Rank_Size | Combined 
+                        | State | Avg       | Opportunity     | WTP %  | Respondent | Rank_Opp | Rank_WTP | Rank_Size | Combined|
                         |       | Awareness | (1-AvgAwareness)| @ $139 | Count      |          |          |           | Rank    |
                         |-------|-----------|-----------------|--------|------------|----------|----------|-----------|---------|
                         | CA    | 0.15      | 0.85            | 65%    | 50         | 3        | 1        | 1         | 5       |
@@ -1794,7 +1840,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
                     """, className="text-content", style={'margin-top': '0'}),
 
-                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
                 dcc.Markdown("""    
                     
                         **Ranking:**
@@ -1803,12 +1849,18 @@ This chart tells you **which factors significantly push the "Expensive" price po
                         * NY: Decent all-arounder, possibly less opportunity/WTP than TX/CA but still fairly strong.
                         * FL: Slightly lower opportunity and WTP than the top 3, but still decent size.   
 
-                        Overall, there's decent opportunity across these states to expand, taking advantage of high WTP, low awareness, and fairly large population size. Kizik is still a fairly new brand, so these states represent a potential great first place to start when evaluating expansion areas (again, according to our simulation).        
+                       There's decent opportunity across these states to expand, taking advantage of high WTP, low awareness, and fairly large population size. Kizik is still a fairly new brand, so these states represent a potential great first place to start when evaluating expansion areas (again, according to our simulation).        
                     """, className="text-content", style={'margin-top': '0'}),
 
                 
-                html.P("Segment-Product Portfolio Alignment (Based on Test Group PME & Simulated Even Segment Distribution)", style={'text-align': 'center', 'font-weight': 'bold', 'margin-top': '1rem', 'margin-bottom': '0.5rem'}),
-                    dcc.Markdown("""
+                html.P( # This is the P component for the title
+                                    [ # Children are now a list
+                                        "Segment-Product Portfolio Alignment ", # First part of the title
+                                        html.Br(),                             # Line break
+                                        "(Based on Test Group PME & Simulated Even Segment Distribution)" # Second part
+                                    ], 
+                                    style={'text-align': 'center', 'font-weight': 'bold', 'margin-top': '3rem', 'margin-bottom': '0.5rem'}
+                                ),                    dcc.Markdown("""
 
                         ```text
                         -----------------------------------------------------------------------------------------------------------
@@ -1844,10 +1896,12 @@ This chart tells you **which factors significantly push the "Expensive" price po
 
                     """, className="text-content", style={'margin-top': '0'}),
 
-                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
-                    dcc.Markdown("""""", className="text-content", style={'margin-top': '0'}),
+                html.P([html.Strong("Analysis", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
+                    dcc.Markdown("""
+                    There are decent opportunities both inside and outside the price bands that Kizik has set. At the moment, the majority of the higher prices contain more "Explore" models and less "Active" models, and there's ample opportunity to expand offerings in those categories to segments at lower price points.
+                    """, className="text-content", style={'margin-top': '0'}),
 
-                html.P([html.Strong("Clear Lack of Entry to Mid-Price Explore Models", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Clear Lack of Entry to Mid-Price Explore Models", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
                     dcc.Markdown("""   
 
                     Even without my chart, it’s fairly clear from a quick look at Kizik’s website that there aren’t many Explore options below $149 - in fact, there are none. 
@@ -1861,16 +1915,16 @@ This chart tells you **which factors significantly push the "Expensive" price po
                     
                     """, className="text-content", style={'margin-top': '0'}),
 
-                html.P([html.Strong("Premium Enthusiasts (PME $140): Consider Explore options, double down on Active features", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Premium Enthusiasts (PME $140): Consider Explore options, double down on Active features", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
                     dcc.Markdown("""   
 
                     They have 10 models within their acceptable price range, with 8 Relax models and only 2 Active Models (0 Explore).
 
-                    Quite clear that they’re fairly underserved in this regard - expanding the “Active” offerings in the $110 - $128 price range with features that are an appealing hybrid between casual/leisure and light athletic activity could fill this gap                    
+                    Quite clear that they’re fairly underserved in this regard - expanding the “Active” offerings in the $110 - $128 price range with features that are an appealing hybrid between casual/leisure and light athletic activity could fill this gap.                 
                     
                     """, className="text-content", style={'margin-top': '0'}),                    
                     
-                html.P([html.Strong("Value Seekers (PME $134) and Curious Skeptics (PME $130)", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Value Seekers (PME $134) and Curious Skeptics (PME $130)", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
                     dcc.Markdown("""   
 
                     This group has 11 models available to them: 0 Outdoor, 3 Active, 8 Casual/Relaxed.
@@ -1881,7 +1935,7 @@ This chart tells you **which factors significantly push the "Expensive" price po
                     
                     """, className="text-content", style={'margin-top': '0'}),     
 
-                html.P([html.Strong("Summary", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '1.5rem 0 0.5rem 0'}),
+                html.P([html.Strong("Summary", style={'font-size': '18px', 'font-weight': 'bold'})], style={'margin': '3rem 0 0.5rem 0'}),
                     dcc.Markdown("""   
 
                 From this data, we can see that there's possibly untapped potential within Kizik's current offerings. While price definitely seems to define its own categories (Explore), it stands to reason that there might be more affordable versions of their more successful models
@@ -2445,7 +2499,7 @@ app.index_string = '''
                 max-width: 900px !important; /* Match chart card width */
                 margin-left: auto !important; /* Center */
                 margin-right: auto !important; /* Center */
-                margin-top: 3rem !important;
+                margin-top: 0.1rem !important;
                 margin-bottom: 2rem !important;
             }
 
@@ -2483,7 +2537,7 @@ app.index_string = '''
             /* --- Other App Styles (Keep Essential) --- */
             .text-container { max-width: 780px !important; width: 100% !important; margin-bottom: 2rem !important; margin-left: auto; margin-right: auto;}
             .text-content { max-width: 780px !important; width: 100% !important; margin-top: 12px !important; margin-right: 0 !important; margin-left: 0 !important; white-space: normal !important; word-break: break-word !important; display: block !important; line-height: 1.65 !important; font-weight: 400 !important; color: #3E3E3E !important; font-size: 15px !important; }
-            .chart-card { background: white !important; border-radius: 12px !important; padding: 1.75rem 1.75rem 2.75rem 1.75rem !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important; width: 100% !important; max-width: 900px !important; border: 1px solid rgba(0, 0, 0, 0.03) !important; position: relative !important; /* margin-bottom: 0 !important; /* Removed default bottom margin */ margin-left: auto !important; margin-right: auto !important; } /* Centered BY DEFAULT */
+            .chart-card { background: white !important; border-radius: 12px !important; padding: 1.75rem 1.75rem 1.75rem 1.75rem !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important; width: 100% !important; max-width: 900px !important; border: 1px solid rgba(0, 0, 0, 0.03) !important; position: relative !important; /* margin-bottom: 0 !important; /* Removed default bottom margin */ margin-left: auto !important; margin-right: auto !important; } /* Centered BY DEFAULT */
             #carousel-card { padding-bottom: 75px !important; margin-bottom: 0 !important; position: relative !important; max-width: 85% !important; margin-right: auto !important; margin-left: auto !important; width: 85% !important; padding: 1rem !important; } /* Centered */
 
             /* --- Ensure Consistent Centering for Visualization Content --- */
@@ -2559,6 +2613,7 @@ app.index_string = '''
                 color: #212529 !important;
                 margin-bottom: 0.5rem !important;
                 display: block;
+                text-align: center !important;
             }
 
             .toolbar-options-list { /* Container for segment buttons */
@@ -2586,7 +2641,7 @@ app.index_string = '''
                 cursor: pointer !important;
                 background-color: transparent !important;
                 border: none !important;
-                text-align: left;
+                text-align: center !important;
                 transition: color 0.2s ease;
                 border-radius: 3px;
             }
