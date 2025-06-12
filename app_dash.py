@@ -1225,7 +1225,7 @@ html.Div([
         html.A("McKinsey", href="https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/the-state-of-the-us-consumer-2024", target="_blank"),
         "). This applies well to the footwear industry, with 78% of shoppers walking away from a footwear purchase due to cost (",
         html.A("Alix Partners", href="https://www.alixpartners.com/newsroom/press-release-new-consumer-study-shows-78-of-shoppers-have-walked-away-from-a-footwear-purchase-due-to-cost/", target="_blank"),
-        "), ideally to find lower-cost alternatives. Additionally, 70% of consumers would halt their purchase, \"opting to compare prices elsewhere or wait for discounts\" (",
+        "), ideally to find lower-cost alternatives. Additionally, 70% of consumers would halt their purchase if prices increased 5% above a perceived competitive price point, \"opting to compare prices elsewhere or wait for discounts\" (",
         html.A("Simon-Kucher & Partners", href="https://www.simon-kucher.com/en/insights/footwear-consumer-priorities-industry-insights", target="_blank"),
         "). This last data point reinforces the logic to apply a competitive handicap: if a 5% increase in price cuases 70% of consumers to abandon a purchase, it shows that WTP for select models is extremely variable when competitive options are present. While it's hard to put a finger on an exact number for this handicap, 20% in this experiment serves as a representation of the effect competitive options have on WTP - at least for this limited experiment. Specific handicaps would require extensive field testing."
     ], className="text-content"),
