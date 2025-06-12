@@ -1209,25 +1209,33 @@ html.Div([
         html.Div([
             html.H3("Control Group", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
             dcc.Markdown("""
-                While our Test Group was being assessed on purchase likelihood before and after a text-based conceptual feature explanation, our Control Group served as a baseline to understand the true effects of that feature explanation (again, in Section 5, the Control group is *not* shown the text-basedconceptual feature explanation).
+                While our Test Group was being assessed on purchase likelihood before and after a text-based conceptual feature explanation, our Control Group served as a baseline to understand the true effects of that feature explanation (again, in Section 5, the Control group is *not* shown the text-based conceptual feature explanation).
             """, className="text-content")
         ], id="control-group", className="text-container"),
-        html.Div([
-            html.H3("Competitive Adjustment", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
-            dcc.Markdown("""
-                To take into account the competitive nature of the market, a competitive adjustment range of 15% - 25% was suggested by Claude, with me settling on a mid-range 20%. Consumers are more likely to pay less when
+        
+html.Div([
+    # --- Title Section ---
+    html.H3("Competitive Adjustment", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
 
+    # --- Paragraph with embedded links ---
+    # This paragraph is constructed as a list of components (strings and html.A for links)
+    # to allow for hyperlinking specific phrases within the text.
+    html.P([
+        "To take into account the competitive nature of the market, a competitive adjustment range of 15% - 25% was suggested by Claude, with me settling on a mid-range 20%. It's well established that consumers are more likely to pay less when competitive options are present, \"trading down\" for a better-perceived mix of value and price (",
+        html.A("McKinsey", href="https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/the-state-of-the-us-consumer-2024", target="_blank"),
+        "). This applies well to the footwear industry, with 78% of shoppers walking away from a footwear purchase due to cost (",
+        html.A("Alix Partners", href="https://www.alixpartners.com/newsroom/press-release-new-consumer-study-shows-78-of-shoppers-have-walked-away-from-a-footwear-purchase-due-to-cost/", target="_blank"),
+        "), ideally to find lower-cost alternatives. Additionally, 70% of consumers would halt their purchase, \"opting to compare prices elsewhere or wait for discounts\" (",
+        html.A("Simon-Kucher & Partners", href="https://www.simon-kucher.com/en/insights/footwear-consumer-priorities-industry-insights", target="_blank"),
+        "). This last data point reinforces the logic to apply a competitive handicap: if a 5% increase in price cuases 70% of consumers to abandon a purchase, it shows that WTP for select models is extremely variable when competitive options are present. While it's hard to put a finger on an exact number for this handicap, 20% in this experiment serves as a representation of the effect competitive options have on WTP - at least for this limited experiment. Specific handicaps would require extensive field testing."
+    ], className="text-content"),
 
-                I chose to add this in after asking about the most glaring errors in the survey, and Claude mentioned that not including it would likely overestimate willingness to pay, given that 1) the survey design at that time asked specifically about Kizik without comparison to alternatives and 2) that real purchase decisions almost always tend to involve trade-offs between brands. This is a uniform competitive handicap that applies to all segments.
+    # --- Second paragraph using dcc.Markdown for standard text ---
+    dcc.Markdown("""
+I chose to add this in after asking about the most glaring errors in the survey, and Claude mentioned that not including it would likely overestimate willingness to pay, given that 1) the survey design at that time asked specifically about Kizik without comparison to alternatives and 2) that real purchase decisions almost always tend to involve trade-offs between brands. This is a uniform competitive handicap that applies to all segments.
+    """, className="text-content")
 
-            """, className="text-content")
-        ], id="competitive-adjustment", className="text-container"),
-        html.Div([
-            html.H3("Population Sampling", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
-            dcc.Markdown("""
-                Census-based regional quotas proportional to population ensured we were able to get a more accurate representation of national demand rather than just basing it on current customer profiles. While standard in many survey designs, I had to ask Claude to implement this after it was revealed (from my prompting) that one of the glaring errors in our survey design was the lack of regional-based population sampling. Had we not implemented these quotas, we would have been measuring demand while sampling current distribution instead of measuring demand based on actual, representative population samples.
-            """, className="text-content")
-        ], id="population-sampling", className="text-container"),
+], id="competitive-adjustment", className="text-container"),
 
 html.Div([
     html.H3("Distance-Weighted Awareness Proxy", className="mb-2", style={'font-size': '1.5rem', 'font-weight': '600'}),
