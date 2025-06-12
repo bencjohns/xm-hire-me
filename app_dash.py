@@ -1221,7 +1221,7 @@ html.Div([
     # This paragraph is constructed as a list of components (strings and html.A for links)
     # to allow for hyperlinking specific phrases within the text.
     html.P([
-        "To take into account the competitive nature of the market, a competitive adjustment range of 15% - 25% was suggested by Claude, with me settling on a mid-range 20%. It's well established that consumers are more likely to pay less when competitive options are present, \"trading down\" for a better-perceived mix of value and price (",
+        "To take into account the competitive nature of the market, a competitive adjustment range of 15% to 25% was suggested by Claude, with me settling on a mid-range 20%. It's well established that consumers are more likely to pay less when competitive options are present, \"trading down\" for a better-perceived mix of value and price (",
         html.A("McKinsey", href="https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/the-state-of-the-us-consumer-2024", target="_blank"),
         "). This applies well to the footwear industry, with 78% of shoppers walking away from a footwear purchase due to cost (",
         html.A("Alix Partners", href="https://www.alixpartners.com/newsroom/press-release-new-consumer-study-shows-78-of-shoppers-have-walked-away-from-a-footwear-purchase-due-to-cost/", target="_blank"),
